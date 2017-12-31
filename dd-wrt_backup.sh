@@ -1,21 +1,21 @@
 #!/bin/sh
 
-ip="192.168.1.1"
-user=""
-pass=""
+IP_ADDR="192.168.1.1"
+USER=""
+PASS=""
 
-logfile="/home/drew/cron/dd-wrt_backup.log"
-cfefile="/mnt/raid5/drew/backup/dd-wrt/cfe.bin-`date +%F.%T`"; 
-nvrambakfile="/mnt/raid5/drew/backup/dd-wrt/nvrambak.bin-`date +%F.%T`"; 
+LOGFILE="/home/drew/cron/dd-wrt_backup.log"
+CFEFILE="/mnt/raid5/drew/backup/dd-wrt/cfe.bin-$(date '+%Y%m%d%H%M%S')";
+NVRAMBAKFILE="/mnt/raid5/drew/backup/dd-wrt/nvrambak.bin-$(date '+%Y%m%d%H%M%S')";
 
-wget -a $logfile --user=$user --password=$pass \
-	http://$ip/backup/cfe.bin -O $cfefile; 
-gzip $cfefile;
+wget -a $LOGFILE --user=$USER --password=$PASS \
+	http://$IP_ADDR/backup/cfe.bin -O "$CFEFILE";
+gzip "$CFEFILE";
 
-wget -a $logfile --user=$user --password=$pass \
-	http://$ip/nvrambak.bin -O $nvrambakfile;
-gzip $nvrambakfile;
+wget -a $LOGFILE --user=$USER --password=$PASS \
+	http://$IP_ADDR/nvrambak.bin -O "$NVRAMBAKFILE";
+gzip "$NVRAMBAKFILE";
 
-wget -a $logfile --user=$user --password=$pass \
-	http://$ip/traffdata.bak -O- | gzip > \
-/mnt/raid5/drew/backup/dd-wrt/traffdata.bak.`date +%F.%T`.gz;
+wget -a $LOGFILE --user=$USER --password=$PASS \
+	http://$IP_ADDR/traffdata.bak -O- | gzip > \
+/mnt/raid5/drew/backup/dd-wrt/traffdata.bak."$(date '+%Y%m%d%H%M%S')".gz;
