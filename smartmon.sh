@@ -1,25 +1,30 @@
-#!/bin/bash 
+#!/bin/bash
 #
 # This is a script from the smartmontools examplescripts/ directory.
 # It can be used as an argument to the -M exec Directive in
-# /etc/smartd.conf, in a line like 
+# /etc/smartd.conf, in a line like
 # -m root@localhost -M exec /path/to/this/file
 #
 # Please see man 8 smartd or man 5 smartd.conf for further
 # information.
 #
 # $Id: Example1,v 1.7 2004/08/29 02:33:17 ballen4705 Exp $
-
+#
 # Save standard input into a temp file
+#
+# Drew Holt <drew@invadelabs.com>
+# shellcheck disable=SC2129
+# SC2129: Consider using { cmd1; cmd2; } >> file instead of individual redirects.
+
 cat > /root/tempfile
 
 # Echo command line arguments into temp file
 echo "Command line argument 1:" >> /root/tempfile
-echo $1 >> /root/tempfile
+echo "$1" >> /root/tempfile
 echo "Command line argument 2:" >> /root/tempfile
-echo $2 >> /root/tempfile
+echo "$2" >> /root/tempfile
 echo "Command line argument 3:" >> /root/tempfile
-echo $3 >> /root/tempfile
+echo "$3" >> /root/tempfile
 
 # Echo environment variables into a temp file
 echo "Variables are":       >> /root/tempfile
@@ -34,11 +39,11 @@ echo "$SMARTD_TFIRST"       >> /root/tempfile
 echo "$SMARTD_TFIRSTEPOCH"  >> /root/tempfile
 
 # Run smartctl -a and save output in temp file
-/usr/sbin/smartctl -a -d $SMARTD_DEVICETYPE $SMARTD_DEVICE >> /root/tempfile
+/usr/sbin/smartctl -a -d "$SMARTD_DEVICETYPE" "$SMARTD_DEVICE" >> /root/tempfile
 
 # Email the contents of the temp file. Solaris and other OSes
 # may need to use /bin/mailx not /bin/mail.
-/bin/mail -s "SMART errors detected on host: `hostname`" $SMARTD_ADDRESS < /root/tempfile
+/bin/mail -s "SMART errors detected on host: $(hostname)" "$SMARTD_ADDRESS" < /root/tempfile
 
 # And exit
 exit 0
