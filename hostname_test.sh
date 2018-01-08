@@ -1,6 +1,6 @@
 #!/bin/bash
 # not for cron but check how often google cloud resets hostname
-# $nohup /home/drew/hostname_test.sh
+# nohup hostname_test.sh
 
 while true;
   do
