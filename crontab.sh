@@ -11,5 +11,5 @@
 0 6 * * * DATE=$(date '+\%Y\%m\%d\%H\%M\%S'); cd /root; php /var/www/drew.invadelabs.com/maintenance/sqlite.php -q --backup-to /root/drew_wiki."$DATE".sqlite; tar -cJf /root/invadelabs.com.$DATE.tar.xz -C /etc apache2/ -C /etc letsencrypt/ -C /var/www/drew.invadelabs.com LocalSettings.php -C /root drew_wiki."$DATE".sqlite; /snap/bin/drive push -no-prompt -destination /Backup/Web invadelabs.com."$DATE".tar.xz >/dev/null; rm /root/invadelabs.com."$DATE".tar.xz /root/drew_wiki."$DATE".sqlite; /snap/bin/drive stat Backup/Web/invadelabs.com.$DATE.tar.xz | highlight --syntax bash --inline-css | mailx -a 'Content-Type: text/html' -s "invadelabs.com backup $DATE" drewderivative@gmail.com
 0 * * * * hostname invadelabs.com
 
-*/5 * * * * IP=$( dig +short myip.opendns.com @resolver1.opendns.com ) && curl "https://usernamefromgddns:password@domains.google.com/nic/update?hostname=mysubdomain.invadelabs.com&myip=$IP" >> google_ddns.log
+*/5 * * * * IP=$( dig +short myip.opendns.com @resolver1.opendns.com ) && curl -sS "https://user:pass@domains.google.com/nic/update?hostname=subdomain.invadelabs.com&myip=$IP" | xargs >> google_ddns.log
 
