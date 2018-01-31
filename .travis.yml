@@ -1,11 +1,32 @@
 language: bash
-sudo: true
+sudo: required
+addons:
+  apt:
+    packages:
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - cmake
 dist: xenial
 before_install:
 - sudo apt-get -qq update
-- sudo apt-get install -y shellcheck
+- sudo apt-get install -y shellcheck kcov
 script:
 - shellcheck -x *.sh
+after_success: |
+  # wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
+  # tar xzf master.tar.gz &&
+  # cd kcov-master &&
+  # mkdir build &&
+  # cd build &&
+  # cmake .. &&
+  # make &&
+  # sudo make install &&
+  # cd ../.. &&
+  # rm -rf kcov-master &&
+  # mkdir -p coverage &&
+  for i in `ls *.sh`; do kcov coverage-$i $i; done;
+  bash <(curl -s https://codecov.io/bash)
 notifications:
   slack:
     secure: eJDlV4SfjtqEyULY7xvXH/bXOE3gEWKggldiPYkN8AP2f6Ct2Xs6PaCPUXea1XFsSzdJLtwnge2FXqqWId/LT/7T8zOlyoLMpbUs4YItjWRoFur1WyjFozVCV6uB/QxGqNJJIltnlkfDmqChoogz9vHPftr1lg72EfVwzKsbGkJBDgMDpIQ6CV1+ITieekXpGagkTPQVlwzjHHfcHMcUVdQdsaiLW2kT7FOQk55gd7Ze/wCJj1DT2QF4ktZVY8btb+DTGOLSaiuk2O74xh+VVJK8bWJG/hgklsBr9g4hIsYLt4/EtBXODTaemRoFVRPP6PeiPjAFzPHnv/TyV7BXU75eOoZKlFfOl9/OvOgeZIqBpG0ccZ8YApfUyQyJJSO4bAC17qIdeewdVrhnlvKab554E4OIwA7XmsqTRqP3WhSMQ2RFXVoMfJm6s+uSXpavkp/VjmAZgMZDTUSaK2oqJhRmEwSyycmh/KGyf3eQhxjuDOycA6jb5OMMGbbkLMPOLDoHW7BY57Voo4m+qRDfSoD4I9/A0pD56xWtFqtqQmvprHEIHr+b9JuFwOhPAZ4zISPfMh0XsJ0lSMmkYnIgurMkGlGfLvcDeX/LuCAJtAtR4w48JjFw/wPFgAMYgFNaaY2sx20mTeG7Xyy0mL8hzNayCRE4MFPLAQCo9Z4dmUA=
