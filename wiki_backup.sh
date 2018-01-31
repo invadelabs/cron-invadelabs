@@ -1,5 +1,5 @@
 #!/bin/sh
-DIR=/mnt/raid5/drew/backup/wiki
+DIR=/backup/wiki
 DATE=$(date '+%Y%m%d%H%M%S')
 
 echo Running: "$DATE";
