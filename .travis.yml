@@ -1,4 +1,4 @@
-require: sudo
+sudo: required
 language: bash
 sudo: required
 dist: xenial
@@ -7,6 +7,8 @@ addons:
     organization: "drew-holt-github" # the key of the org you chose at step #3
     token:
       secure: u5RX3uF51zXUjp8ZIayDXsxVSPuS71hpBmRqt443p0QDtcloVlaAB5FhahCXuHjKn9dDLbydq8qO0+vPabAwmvssrd6hIgRD0TDRlfgfmr+QeoKNQL6+CL9WI1q+IbDIL5ZAvdntmnQhPICULGvMK4pZozylU7jZrCM4H1Q2R2HAbiFJ24OR5ZNeQ6HZI3lG6wAKTO/qTf/aZq9VXIi4jdrMlpb/iPUOsLJAh1hm6MFi8bFkNbXVdvWG1sEp8cca4PJJ/XS6ExTEuGeIXoJa0aRGdw/JLCWDGLerOTZU7GSrCz9RrtogTXVtrz8bOXQkQp8/ddmL3c2LrC1Yu37VBiHX+JRaTnQEmT7PRpyBlFq73NJXcA7ywNSX82subwvOg7+2YgDDC/tbEFOFwVv6ZE0pC82ZN9K+ApzilDuginfTy6RM+JNBAo5arGoJYD+bymWa1MhknhrBGBNv5j0a6MLg9yXexVvwBAE1ysKBI6djgvei1lYI3L6sPCc2L3tHpck6x2/4PLwZYjAVElS24bvmPu9sIwzEG3DSWRD2EqAFpQxLmrIbDgfhq5zMzvpXiCM5cexezPQ1hC8Ht5zlwaPg5XJKJrbYPzghkOm77z76ENZt3BjyotH/utKW7mczmn1rOrzxdiawgXtUWP/MX/iy/OJkCIJb0Yj71HjCjU8=
+env:
+- SONAR_SCANNER_HOME=$HOME/.sonarscanner/sonar-scanner-2.8
 before_install:
 - sudo apt-get -qq update
 - sudo apt-get install -y shellcheck kcov
