@@ -1,3 +1,4 @@
+require: sudo
 language: bash
 sudo: required
 dist: xenial
