@@ -1,14 +1,32 @@
 #!/bin/bash
+# Drew Holt <drewderivative@gmail.com>
+# script to git pull latest master and rsync to live site
 
 EMAIL="drew@invadelabs.com"
 REPO_DIR="/home/drew/invadelabs.com";
 COMMIT=$(git -C "$REPO_DIR" log -1 --decorate=no | head -1)
 
-git -C "$REPO_DIR" pull;
-
-# exit if REPO_DIR does not exist
+# exit if REPO_DIR does not exist or rsync will try to copy the contents of
+# of /
 if [ ! -d "$REPO_DIR" ]; then
   exit 1
 fi
 
-rsync -av --delete --exclude .git/ "$REPO_DIR"/ /var/www/invadelabs.com/ | mailx -s "invadelabs.com $COMMIT deployed to site" "$EMAIL"
+# pull latest master branch
+git -C "$REPO_DIR" pull;
+
+# rsync latest git master branch to live site
+function rsync () {
+  rsync -av --delete --exclude .git/ "$REPO_DIR"/ /var/www/invadelabs.com/
+}
+
+# send a message
+function mailer () {
+  mailx -s "invadelabs.com $COMMIT deployed to site" "$EMAIL"
+}
+
+# run and keep log as variable
+RSYNC=$(rsync)
+
+# send log off via email
+echo "$RSYNC" | mailer
