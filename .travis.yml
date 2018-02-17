@@ -11,7 +11,7 @@ addons:
 #- SONAR_SCANNER_HOME=$HOME/.sonarscanner/sonar-scanner-2.8
 before_install:
 - sudo apt-get -qq update
-- sudo apt-get install -y shellcheck kcov oracle-java8-set-default
+- sudo apt-get install -y shellcheck kcov openjdk-8-jdk
 script:
 - shellcheck -x *.sh
 - sonar-scanner
