@@ -51,4 +51,4 @@ STATUS=$(get_stat)
 echo "$URL $STATUS" | hl | mailer > /dev/null;
 
 # send status and url to slack
-echo "$STATUS" | ./slacktee.sh --config slacktee.conf -l "$URL" > /dev/null;
+echo "$STATUS" | ./slacktee.sh --config slacktee.conf -u gdrive_backup.sh -i floppy_disk -l "$URL" > /dev/null;
