@@ -5,5 +5,5 @@
 # m h  dom mon dow   command
 0 3,15 * * * certbot --apache renew --quiet
 0 6 * * * /root/gen_sitemap.sh
-0 6 * * * /root/gdrive_backup.sh
+0 6 * * * /root/gdrive_backup.sh invadelabs.com Backup/Web
 0 * * * * hostname invadelabs.com
