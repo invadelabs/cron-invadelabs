@@ -37,4 +37,4 @@ function hl () {
 echo -e "$URL\n$URL_OLD\n$NEWSITE" | hl | mailer > /dev/null
 
 # send the slack message
-echo -e "$URL_OLD\n$NEWSITE" | ./slacktee.sh --config slacktee.conf -u gen_sitemap.sh -i world_map -l "$URL" > /dev/null;
+echo -e "$URL_OLD\n$NEWSITE" | ./slacktee.sh --config slacktee.conf -u "$(basename "$0")" -i world_map -l "$URL" > /dev/null;
