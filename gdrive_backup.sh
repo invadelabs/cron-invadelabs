@@ -10,11 +10,12 @@
 # GDRIVE_FOLDER="Backup/Web" # no leading slash
 
 function usage {
-    echo "usage: $(basename "$0") -a archivename -d /snap/bin -f Backup/Web -e my@email.com -s"
+    echo "usage: $(basename "$0") -a archivename -d /snap/bin -f Backup/Web -l gdrive_backup_invadelabs.com.txt -e my@email.com -s"
     echo "  required:"
     echo "  -a archive       name of archive"
     echo "  -d /snap/bin     path to drive binary"
     echo "  -f Backup/Web    path to gdrive archive folder without leading slash"
+    echo "  -l list.txt      list of files to add to archive"
     echo ""
     echo "  requires atleast one of the following:"
     echo "  -e email         email address"
@@ -27,7 +28,7 @@ if [ "$1" == "" ]; then
 fi
 
 # note no : after s
-while getopts a:d:e:f:s option
+while getopts a:d:e:f:l:s option
 do
   case "${option}"
   in
@@ -35,6 +36,7 @@ do
   d) DRIVE_BIN_PATH=${OPTARG};;
   e) EMAIL_TO=${OPTARG};;
   f) GDRIVE_FOLDER=${OPTARG};;
+  l) FILELIST=${OPTARG};;
   s) USE_SLACK="true";;
   *)
     usage
@@ -43,9 +45,9 @@ do
   esac
 done
 
-if [ -z "$ARCHIVE" ] || [ -z "$DRIVE_BIN_PATH" ] || [ -z "$GDRIVE_FOLDER" ]; then
-  echo "Need an archive name, path to drive binary, and destination path. ex:"
-  echo "./gdrive_backup.sh -a invadelabs.com -d /snap/bin -f Backup/Web"
+if [ -z "$ARCHIVE" ] || [ -z "$DRIVE_BIN_PATH" ] || [ -z "$GDRIVE_FOLDER" ] || [ -z "$FILELIST" ]; then
+  echo "Need an archive name, path to drive binary, destination path, and file list. ex:"
+  echo "./gdrive_backup.sh -a invadelabs.com -d /snap/bin -f Backup/Web -l gdrive_backup_invadelabs.com.txt"
   exit 1
 elif [ -z "$EMAIL_TO" ] && [ -z "$USE_SLACK" ]; then
   echo "Need to set atleast one of -e or -s. ex:"
@@ -57,11 +59,7 @@ DATE=$(date '+%Y%m%d%H%M%S')
 
 # pack everything into a tar.xz
 function backup () {
-  tar -cJf /root/"$ARCHIVE"."$DATE".tar.xz \
-    -C /etc apache2/ \
-    -C /etc letsencrypt/ \
-    -C /var/www/drew.invadelabs.com LocalSettings.php \
-    -C /var/www/data drew_wiki.sqlite
+  tar -cJf /root/"$ARCHIVE"."$DATE".tar.xz -T "$FILELIST"
 }
 
 # push archive to google drive,
