@@ -2,26 +2,60 @@
 # Drew Holt <drewderivative@gmail.com>
 # create an archive, upload it to google drive, send status to slack and email
 # requires https://github.com/odeke-em/drive initialized in cwd
-# requires https://github.com/course-hero/slacktee in path
-#
-# usage: gdrive_backup.sh archivename gdrive_dest_dir
-# ex: ./gdrive_backup.sh invadelabs.com Backup/Web
+# slack requires https://github.com/course-hero/slacktee configured in path
 
-DATE=$(date '+%Y%m%d%H%M%S')
-EMAIL_TO="drewderivative@gmail.com"
 # ARCHIVE="invadelabs.com"
-ARCHIVE="$1"
+# DRIVE_BIN_PATH="/snap/bin"
+# EMAIL_TO="drewderivative@gmail.com"
 # GDRIVE_FOLDER="Backup/Web" # no leading slash
-GDRIVE_FOLDER="$2"
-DRIVE_BIN_PATH="/snap/bin"
 
-if [ -z "$ARCHIVE" ] || [ -z "$GDRIVE_FOLDER" ]; then
-  echo "Need an archive name and destination path, ex:"
-  echo "./gdrive_backup.sh invadelabs.com Backup/Web"
+function usage {
+    echo "usage: $(basename "$0") -a archivename -d /snap/bin -f Backup/Web -e my@email.com -s"
+    echo "  required:"
+    echo "  -a archive       name of archive"
+    echo "  -d /snap/bin     path to drive binary"
+    echo "  -f Backup/Web    path to gdrive archive folder without leading slash"
+    echo ""
+    echo "  requires atleast one of the following:"
+    echo "  -e email         email address"
+    echo "  -s               use slack"
+    exit 1
+}
+
+if [ "$1" == "" ]; then
+  usage
+fi
+
+# note no : after s
+while getopts a:d:e:f:s option
+do
+  case "${option}"
+  in
+  a) ARCHIVE=${OPTARG};;
+  d) DRIVE_BIN_PATH=${OPTARG};;
+  e) EMAIL_TO=${OPTARG};;
+  f) GDRIVE_FOLDER=${OPTARG};;
+  s) USE_SLACK="true";;
+  *)
+    usage
+    exit 1
+    ;;
+  esac
+done
+
+if [ -z "$ARCHIVE" ] || [ -z "$DRIVE_BIN_PATH" ] || [ -z "$GDRIVE_FOLDER" ]; then
+  echo "Need an archive name, path to drive binary, and destination path. ex:"
+  echo "./gdrive_backup.sh -a invadelabs.com -d /snap/bin -f Backup/Web"
+  exit 1
+elif [ -z "$EMAIL_TO" ] && [ -z "$USE_SLACK" ]; then
+  echo "Need to set atleast one of -e or -s. ex:"
+  echo "./gdrive_backup.sh -e my@gmail.com -s"
   exit 1
 fi
 
-# pack everything into a tar.xz, push it to google drive, cleanup
+DATE=$(date '+%Y%m%d%H%M%S')
+
+# pack everything into a tar.xz
 function backup () {
   tar -cJf /root/"$ARCHIVE"."$DATE".tar.xz \
     -C /etc apache2/ \
@@ -30,10 +64,12 @@ function backup () {
     -C /var/www/data drew_wiki.sqlite
 }
 
+# push archive to google drive,
 function google_push {
   "$DRIVE_BIN_PATH"/drive push -no-prompt -destination /"$GDRIVE_FOLDER" "$ARCHIVE"."$DATE".tar.xz >/dev/null
 }
 
+# remove archive from local disk
 function clean_up {
   # rm /root/"$ARCHIVE"."$DATE".tar.xz /root/drew_wiki."$DATE".sqlite
   rm /root/"$ARCHIVE"."$DATE".tar.xz
@@ -66,8 +102,12 @@ backup; google_push; clean_up;
 URL=$(get_url)
 STATUS=$(get_stat)
 
-# email status and url of file on google drive
-echo "$URL $STATUS" | hl | mailer > /dev/null;
+# if set email status and url of file on google drive
+if [ ! -z "$EMAIL_TO" ]; then
+  echo "$URL $STATUS" | hl | mailer > /dev/null;
+fi
 
-# send status and url to slack
-echo "$STATUS" | ./slacktee.sh --config slacktee.conf -u "$(basename "$0")" -i floppy_disk -l "$URL" > /dev/null;
+# if set send status and url to slack
+if [ ! -z "$USE_SLACK" ]; then
+  echo "$STATUS" | ./slacktee.sh --config slacktee.conf -u "$(basename "$0")" -i floppy_disk -l "$URL" > /dev/null;
+fi
