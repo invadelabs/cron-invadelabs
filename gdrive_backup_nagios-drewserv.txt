@@ -1,0 +1,2 @@
+--exclude nagios/var/rw/nagios.qh
+-C /home/drew nagios/
