@@ -3,9 +3,11 @@
 # SC1117: Backslash is literal in "\n". Prefer explicit escaping: "\\n".
 # Drew Holt <drewderivative@gmail.com>
 # convert mediawiki to md and git commit on cron
-# 
+#
 # apt-get install pandoc bc
 # git clone https://github.com/peterjc/mediawiki_to_git_md
+#   set:
+#   convert.py: prefix = "docs/"
 # add key to ~/.ssh/my-github-key
 # chmod 400 ~/.ssh/my-github-key
 # usage: ./wiki_to_md.sh &> /dev/null
