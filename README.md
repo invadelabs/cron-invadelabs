@@ -12,3 +12,4 @@ gdrive_backup.sh          | google drive backup script on cron for invadelabs.co
 gen_sitemap.sh            | create new mediawiki sitemap for search engines
 hostname_test.sh          | check how often google cloud resets hostname
 mysql_backup.sh           | simple mysql backup script
+wiki_to_md.sh             | convert mediawiki to markdown, upload to github
