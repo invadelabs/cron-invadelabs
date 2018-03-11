@@ -87,9 +87,10 @@ function adjust_repo() {
   git add _config.yml
   git commit -m "add _config.yml"
 
-  mv Main_Page.md README.md
-  ln -s README.md index.md
-  git add README.md index.md
+  mv Main_Page.md index.md
+  cp index.md README.md
+  sed -i 's/ \"wikilink/.md \"wikilink/' README.md
+  git add index.md README.md
   git commit -m "move Main_Page.md to README.md and link index.md to it"
 
   mkdir mediawiki
