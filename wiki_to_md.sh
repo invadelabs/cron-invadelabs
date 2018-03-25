@@ -30,7 +30,7 @@ TOKEN=$(cat /root/token)
 mkdir "$GITDIR"
 cd "$GITDIR" || exit
 
-function git_init_dir () {
+git_init_dir () {
   # curl -H "Authorization: token $TOKEN" \
   # -d '{"name": "drewwiki", "default_branch":"temp"}' \
   # https://api.github.com/repos/invadelabs/drewwiki
@@ -60,7 +60,7 @@ function git_init_dir () {
   git checkout -b gh-pages
 }
 
-function export_xml () {
+export_xml () {
   php "$DIR"/maintenance/dumpBackup.php \
     --quiet \
     --conf "$DIR"/LocalSettings.php \
@@ -69,7 +69,7 @@ function export_xml () {
     --uploads > "$GITDIR"/drewwiki.xml
 }
 
-function mediawiki_to_git_md () {
+mediawiki_to_git_md () {
   touch "$GITDIR"/user_blocklist.txt
   echo "Drew	Drew Holt <drewderivative@gmail.com>" > "$GITDIR"/usernames.txt
   IGNORE="*.sql *.xml"
@@ -81,7 +81,7 @@ function mediawiki_to_git_md () {
   git commit -m "add files for mediawiki_to_git_md"
 }
 
-function adjust_repo() {
+adjust_repo () {
   CONFIGYML="theme: jekyll-theme-primer"
   echo "$CONFIGYML" > "$GITDIR"/_config.yml
   git add _config.yml
@@ -98,18 +98,18 @@ function adjust_repo() {
   git commit -m "move *.mediawiki to mediawiki/ dir"
 }
 
-function git_reduce_size () {
+git_reduce_size () {
   git gc
   git gc --aggressive
   git prune
 }
 
-function git_push () {
+git_push () {
   git remote add origin git@github.com:invadelabs/drewwiki.git
   git push -u origin gh-pages -f
 }
 
-function cleanup () {
+cleanup () {
   rm -rf "$GITDIR"
 }
 

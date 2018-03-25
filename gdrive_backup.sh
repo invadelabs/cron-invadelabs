@@ -9,7 +9,7 @@
 # EMAIL_TO="drewderivative@gmail.com"
 # GDRIVE_FOLDER="Backup/Web" # no leading slash
 
-function usage {
+usage () {
     echo "usage: $(basename "$0") -a archivename -d /snap/bin -f Backup/Web -l gdrive_backup_invadelabs.com.txt -e my@email.com -s"
     echo "  required:"
     echo "  -a archive       name of archive"
@@ -58,38 +58,38 @@ fi
 DATE=$(date '+%Y%m%d%H%M%S')
 
 # pack everything into a tar.xz
-function backup () {
+backup () {
   tar -cJf /root/"$ARCHIVE"."$DATE".tar.xz -T "$FILELIST"
 }
 
 # push archive to google drive,
-function google_push {
+google_push () {
   "$DRIVE_BIN_PATH"/drive push -no-prompt -destination /"$GDRIVE_FOLDER" "$ARCHIVE"."$DATE".tar.xz >/dev/null
 }
 
 # remove archive from local disk
-function clean_up {
+clean_up () {
   # rm /root/"$ARCHIVE"."$DATE".tar.xz /root/drew_wiki."$DATE".sqlite
   rm /root/"$ARCHIVE"."$DATE".tar.xz
 }
 
 # get the status of archive on google drive and strip out ansi colors
-function get_stat () {
+get_stat () {
   "$DRIVE_BIN_PATH"/drive stat "$GDRIVE_FOLDER"/"$ARCHIVE"."$DATE".tar.xz | sed 's/\x1b\[[0-9;]*m//g'
 }
 
 # get url of archive on google drive
-function get_url () {
+get_url () {
   "$DRIVE_BIN_PATH"/drive url "$GDRIVE_FOLDER"/"$ARCHIVE"."$DATE".tar.xz | cut -d" " -f 2
 }
 
 # creates text output as preformatted html
-function hl () {
+hl () {
   highlight --syntax txt --inline-css
 }
 
 # send email with type text/html
-function mailer () {
+mailer () {
   mailx -a 'Content-Type: text/html' -s "$ARCHIVE backup $DATE" "$EMAIL_TO"
 }
 

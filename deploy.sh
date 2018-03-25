@@ -16,12 +16,12 @@ fi
 git -C "$REPO_DIR" pull;
 
 # rsync latest git master branch to live site
-function rsync () {
+rsync () {
   rsync -av --delete --exclude .git/ "$REPO_DIR"/ /var/www/invadelabs.com/
 }
 
 # send a message
-function mailer () {
+mailer () {
   mailx -s "invadelabs.com $COMMIT deployed to site" "$EMAIL"
 }
 

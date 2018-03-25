@@ -12,7 +12,7 @@ DATE=$(date '+%Y%m%d%H%M%S')
 URL="https://$SITE/sitemap/sitemap-$SITE-NS_0-0.xml"
 URL_OLD="https://$SITE/sitemap/sitemap-$SITE-NS_0-0.$DATE.xml"
 
-function usage {
+usage () {
     echo "  requires atleast one of the following:"
     echo "  -e email         email address"
     echo "  -s               use slack"
@@ -50,12 +50,12 @@ NEWSITE=$(php /var/www/"$SITE"/maintenance/generateSitemap.php \
   --server=https://"$SITE")
 
 # send an email
-function mailer () {
+mailer () {
   mailx -a 'Content-Type: text/html' -s "DrewWiki Sitemap Updated $DATE" "$EMAIL_TO"
 }
 
 # creates text output as preformatted html
-function hl () {
+hl () {
   highlight --syntax txt --inline-css
 }
 
