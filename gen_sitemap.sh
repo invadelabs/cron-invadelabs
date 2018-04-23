@@ -8,7 +8,7 @@
 
 SITE="drew.invadelabs.com"
 DIR="/var/www/$SITE/sitemap"
-DATE=$(date '+%Y%m%d%H%M%S')
+DATE=$(date '+%Y%m%d%H%M%S%z')
 URL="https://$SITE/sitemap/sitemap-$SITE-NS_0-0.xml"
 URL_OLD="https://$SITE/sitemap/sitemap-$SITE-NS_0-0.$DATE.xml"
 

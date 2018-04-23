@@ -3,7 +3,7 @@
 # nohup hostname_test.sh
 
 HOST_CHECK="invadelabs.com"
-DATE=$(date '+%Y%m%d%H%M%S')
+DATE=$(date '+%Y%m%d%H%M%S%z')
 CHECK_FILE="/tmp/hostname_test-$DATE.log"
 
 while true;
