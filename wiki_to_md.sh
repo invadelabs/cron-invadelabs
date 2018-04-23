@@ -22,7 +22,7 @@
 
 SITE="drew.invadelabs.com"
 DIR="/var/www/$SITE"
-DATE=$(date '+%Y%m%d%H%M%S')
+DATE=$(date '+%Y%m%d%H%M%S%z')
 GITDIR="/tmp/$SITE.$DATE"
 GIT_SSH_COMMAND="ssh -i ~/.ssh/jenkins-invadelabs -o StrictHostKeyChecking=no"
 TOKEN=$(cat /root/token)

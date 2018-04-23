@@ -55,7 +55,7 @@ elif [ -z "$EMAIL_TO" ] && [ -z "$USE_SLACK" ]; then
   exit 1
 fi
 
-DATE=$(date '+%Y%m%d%H%M%S')
+DATE=$(date '+%Y%m%d%H%M%S%z')
 
 # pack everything into a tar.xz
 backup () {

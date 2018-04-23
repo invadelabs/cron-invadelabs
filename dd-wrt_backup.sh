@@ -3,7 +3,7 @@
 IP_ADDR="192.168.1.1"
 USER=""
 PASS=""
-DATE=$(date '+%Y%m%d%H%M%S')
+DATE=$(date '+%Y%m%d%H%M%S%z')
 DIR="/backup/dd-wrt"
 LOGFILE="$DIR/dd-wrt_backup.log"
 CFEFILE="$DIR/cfe.bin-$DATE";
