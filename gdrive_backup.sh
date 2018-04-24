@@ -60,17 +60,19 @@ DATE=$(date '+%Y%m%d%H%M%S%z')
 # pack everything into a tar.xz
 backup () {
   tar -cJf /root/"$ARCHIVE"."$DATE".tar.xz -T "$FILELIST"
+  sha256sum /root/"$ARCHIVE"."$DATE".tar.xz > /root/"$ARCHIVE"."$DATE".tar.xz.sha256
 }
 
 # push archive to google drive,
 google_push () {
-  "$DRIVE_BIN_PATH"/drive push -no-prompt -destination /"$GDRIVE_FOLDER" "$ARCHIVE"."$DATE".tar.xz >/dev/null
+  "$DRIVE_BIN_PATH"/drive push -no-prompt -destination /"$GDRIVE_FOLDER" "$ARCHIVE"."$DATE".tar.xz "$ARCHIVE"."$DATE".tar.xz.sha256 >/dev/null
 }
 
 # remove archive from local disk
 clean_up () {
   # rm /root/"$ARCHIVE"."$DATE".tar.xz /root/drew_wiki."$DATE".sqlite
   rm /root/"$ARCHIVE"."$DATE".tar.xz
+  rm /root/"$ARCHIVE"."$DATE".tar.xz.sha256
 }
 
 # get the status of archive on google drive and strip out ansi colors
