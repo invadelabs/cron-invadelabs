@@ -95,6 +95,20 @@ mailer () {
   mailx -a 'Content-Type: text/html' -s "$ARCHIVE backup $DATE" "$EMAIL_TO"
 }
 
+slack_msg () {
+  echo "$1" | \
+  /root/slacktee.sh \
+  --config /root/slacktee.conf \
+  -e "drive stat $GDRIVE_FOLDER/$ARCHIVE.$DATE.tar.xz" "Command run"\
+  -t "$URL" \
+  -a good \
+  -c general \
+  -u "$(basename "$0")" \
+  -i floppy_disk \
+  -l "$URL" > /dev/null;
+  #-p # plain text message
+}
+
 # start backup
 backup; google_push; clean_up;
 
@@ -109,5 +123,5 @@ fi
 
 # if set send status and url to slack
 if [ ! -z "$USE_SLACK" ]; then
-  echo "$STATUS" | ./slacktee.sh --config slacktee.conf -u "$(basename "$0")" -i floppy_disk -l "$URL" > /dev/null;
+  slack_msg "$STATUS" > /dev/null;
 fi

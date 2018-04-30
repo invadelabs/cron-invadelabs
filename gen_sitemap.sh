@@ -61,6 +61,20 @@ hl () {
   highlight --syntax txt --inline-css
 }
 
+slack_msg () {
+  echo "$1" | \
+  /root/slacktee.sh \
+  --config /root/slacktee.conf \
+  -e "Command run" "php /var/www/$SITE/maintenance/generateSitemap.php --compress no --fspath=/var/www/$SITE/sitemap/ --identifier=$SITE --urlpath=https://$SITE/ --server=https://$SITE" \
+  -t "$URL" \
+  -a good \
+  -c general \
+  -u "$(basename "$0")" \
+  -i world_map \
+  -l "$URL" > /dev/null;
+  #-p # plain text message
+}
+
 # if set send the email
 if [ ! -z "$EMAIL_TO" ]; then
   echo -e "$URL\n$URL_OLD\n$NEWSITE" | hl | mailer > /dev/null
@@ -68,5 +82,5 @@ fi
 
 # if set send the slack message
 if [ ! -z "$USE_SLACK" ]; then
-  echo -e "$URL_OLD\n$NEWSITE" | ./slacktee.sh --config slacktee.conf -u "$(basename "$0")" -i world_map -l "$URL" > /dev/null;
+  slack_msg "$URL_OLD\n$NEWSITE"  > /dev/null;
 fi
