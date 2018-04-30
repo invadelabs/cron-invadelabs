@@ -10,7 +10,7 @@ IP="$(hostname -I | cut -f1 -d" ")"
 DOCKER_STATUS="$(docker ps -a | grep $CONTAINER)"
 LOCK_FILE="/tmp/docker.down"
 
-send_msg () {
+slack_msg () {
   echo "Container $CONTAINER is $1 on $HOSTNAME" | \
   /root/slacktee.sh \
   --config /root/slacktee.conf \
@@ -29,7 +29,7 @@ case "$STATUS" in
     if [ ! -f $LOCK_FILE ]; then
       MESSAGE="not running"
       COLOR="danger"
-      send_msg "$MESSAGE" "$COLOR"
+      slack_msg "$MESSAGE" "$COLOR"
       # create a lock file to only alert once
       touch "$LOCK_FILE"
     fi
@@ -38,7 +38,7 @@ case "$STATUS" in
     if [ -f $LOCK_FILE ]; then
       MESSAGE="running"
       COLOR="good"
-      send_msg "$MESSAGE" "$COLOR"
+      slack_msg "$MESSAGE" "$COLOR"
       # remove lock file
       rm "$LOCK_FILE"
     fi

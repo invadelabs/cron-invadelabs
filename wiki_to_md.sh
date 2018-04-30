@@ -19,7 +19,6 @@
 #
 # usage: ./wiki_to_md.sh &> /dev/null
 
-
 SITE="drew.invadelabs.com"
 DIR="/var/www/$SITE"
 DATE=$(date '+%Y%m%d%H%M%S%z')
@@ -109,6 +108,20 @@ git_push () {
   git push -u origin gh-pages -f
 }
 
+slack_msg () {
+  echo "$1" | \
+  /root/slacktee.sh \
+  --config /root/slacktee.conf \
+  -e "git push -u origin gh-pages -f" "$STATUS "\
+  -t "https://invadelabs.github.io/drewwiki" \
+  -a good \
+  -p \
+  -c general \
+  -u "$(basename "$0")" \
+  -i fast_forward \
+  -l https://invadelabs.github.io/drewwiki > /dev/null;
+}
+
 cleanup () {
   rm -rf "$GITDIR"
 }
@@ -121,10 +134,11 @@ mediawiki_to_git_md &> /dev/null
 adjust_repo &> /dev/null
 git_reduce_size &> /dev/null
 STATUS=$(git_push)
+COMMIT="$(git rev-parse HEAD | cut -c -7)"
 
 END=$(date +%s)
 DIFF=$(echo "$END - $START" | bc)
 
-echo -e "$DIFF seconds\n$STATUS" | /root/slacktee.sh --config /root/slacktee.conf -u "$(basename "$0")" -i fast_forward -l "$URL" > /dev/null;
+slack_msg "Commit $COMMIT took ${DIFF}s https://github.com/invadelabs/drewwiki/commit/$COMMIT" > /dev/null
 
 cleanup
