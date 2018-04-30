@@ -1,7 +1,9 @@
 #!/bin/bash
+# Drew Holt <drew@invadelabs.com>
+#
 # shellcheck disable=SC1117
 # SC1117: Backslash is literal in "\n". Prefer explicit escaping: "\\n".
-# Drew Holt <drewderivative@gmail.com>
+#
 # gen_sitemap.sh
 # create a new sitemap of media wiki on cron
 # slack requires https://github.com/course-hero/slacktee configured in path

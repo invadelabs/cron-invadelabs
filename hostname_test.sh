@@ -1,4 +1,6 @@
 #!/bin/bash
+# Drew Holt <drew@invadelabs.com>
+#
 # not for cron but check how often google cloud resets hostname
 # nohup hostname_test.sh
 
