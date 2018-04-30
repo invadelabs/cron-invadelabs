@@ -1,10 +1,10 @@
 #!/bin/bash
+# Drew Holt <drew@invadelabs.com>
+# convert mediawiki to md and git commit on cron
+#
 # shellcheck disable=SC1117,SC2034
 # SC1117: Backslash is literal in "\n". Prefer explicit escaping: "\\n".
 # SC2034: GIT_SSH_COMMAND appears unused. Verify it or export it.
-#
-# Drew Holt <drewderivative@gmail.com>
-# convert mediawiki to md and git commit on cron
 #
 # requires
 # apt-get install pandoc bc
@@ -55,7 +55,7 @@ git_init_dir () {
   cd "$GITDIR" || exit
   git init
   git config user.name "Drew Holt"
-  git config user.email "drewderivative@gmail.com"
+  git config user.email "drew@invadelabs.com"
 
   git checkout -b gh-pages
 }
@@ -71,7 +71,7 @@ export_xml () {
 
 mediawiki_to_git_md () {
   touch "$GITDIR"/user_blocklist.txt
-  echo "Drew	Drew Holt <drewderivative@gmail.com>" > "$GITDIR"/usernames.txt
+  echo "Drew	Drew Holt <drew@invadelabs.com>" > "$GITDIR"/usernames.txt
   IGNORE="*.sql *.xml"
   echo "$IGNORE" | tr ' ' '\n' > "$GITDIR"/.gitignore
 

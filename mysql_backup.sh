@@ -1,6 +1,7 @@
 #!/bin/sh
+# Drew Holt <drew@invadelabs.com>
+#
 # mysql_backup.sh
-# Drew Holt <drewderivative@gmail.com>
 # Simple mysql backup script
 
 USER=

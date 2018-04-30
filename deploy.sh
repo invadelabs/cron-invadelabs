@@ -1,5 +1,5 @@
 #!/bin/bash
-# Drew Holt <drewderivative@gmail.com>
+# Drew Holt <drew@invadelabs.com>
 # script to git pull latest master and rsync to live site
 
 EMAIL="drew@invadelabs.com"

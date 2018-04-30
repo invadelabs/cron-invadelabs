@@ -1,4 +1,6 @@
 #!/bin/sh
+# Drew Holt <drew@invadelabs.com>
+# script to backup cfe.bin nvrambak.bin and traffdata.bak for DD-WRT
 
 IP_ADDR="192.168.1.1"
 USER=""

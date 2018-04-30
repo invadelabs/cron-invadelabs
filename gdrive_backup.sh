@@ -1,12 +1,12 @@
 #!/bin/bash
-# Drew Holt <drewderivative@gmail.com>
+# Drew Holt <drew@invadelabs.com>
 # create an archive, upload it to google drive, send status to slack and email
 # requires https://github.com/odeke-em/drive initialized in cwd
 # slack requires https://github.com/course-hero/slacktee configured in path
 
 # ARCHIVE="invadelabs.com"
 # DRIVE_BIN_PATH="/snap/bin"
-# EMAIL_TO="drewderivative@gmail.com"
+# EMAIL_TO="drew@invadelabs.com"
 # GDRIVE_FOLDER="Backup/Web" # no leading slash
 
 usage () {

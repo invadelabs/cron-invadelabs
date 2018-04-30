@@ -7,4 +7,4 @@
 0 5 * * * /root/gen_sitemap.sh -s
 1 5 * * * /root/gdrive_backup.sh -a invadelabs.com -d /snap/bin -f Backup/Web -l gdrive_backup_invadelabs.com.txt -s
 0 * * * * hostname invadelabs.com
-59 4 * * 0 /usr/sbin/lynis audit system | /root/ansi2html.sh --bg=dark | mailx -a 'Content-Type: text/html' -s "Lynis Audit: invadelabs.com" drewderivative@gmail.com
+59 4 * * 0 /usr/sbin/lynis audit system | /root/ansi2html.sh --bg=dark | mailx -a 'Content-Type: text/html' -s "Lynis Audit: invadelabs.com" drew@invadelabs.com
