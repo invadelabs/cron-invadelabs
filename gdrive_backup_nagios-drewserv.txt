@@ -1,2 +1,3 @@
 --exclude nagios/var/rw/nagios.qh
+--exclude nagios/etc/nagios-invadelabs/.git
 -C /home/drew nagios/
