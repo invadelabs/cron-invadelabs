@@ -11,8 +11,12 @@ DOCKER_STATUS="$(docker ps -a | grep $CONTAINER)"
 LOCK_FILE="/tmp/docker.down"
 
 slack_msg () {
+  if [ ! -f /root/scripts/slacktee.sh ]; then
+    curl -o /root/scripts/slacktee.sh https://raw.githubusercontent.com/course-hero/slacktee/master/slacktee.sh
+    chmod 755 /root/scripts/slacktee.sh
+  fi
   echo "Container $CONTAINER is $1 on $HOSTNAME" | \
-  /root/slacktee.sh \
+  /root/scripts/slacktee.sh \
   --config /root/slacktee.conf \
   -e "docker ps -a" "$DOCKER_STATUS "\
   -t "Container $CONTAINER is $1 on $HOSTNAME" \

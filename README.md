@@ -4,13 +4,12 @@ Supporting scripts for [invadelabs.com](https://invadelabs.com).
 
 script                    | function
 ------------------------- | ---------------------------------------------------------
+check_ddns.sh             | ddns log on cron
 check_docker.sh           | slack a message when nagios docker container goes up or down
 crontab-drewserv.com.sh   | crontab -e from invadelabs host
 crontab-invadelabs.com.sh | crontab -e from invadelabs host
 dd-wrt_backup.sh          | simple DD-WRT config backup script
-deploy.sh                 | _deprecated_ deploy latest invadelabs.com from github
 gdrive_backup.sh          | google drive backup script on cron for invadelabs.com and drewserv
 gen_sitemap.sh            | create new mediawiki sitemap for search engines
-hostname_test.sh          | check how often google cloud resets hostname
 mysql_backup.sh           | simple mysql backup script
 wiki_to_md.sh             | convert mediawiki to markdown, upload to github
