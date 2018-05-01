@@ -5,6 +5,9 @@
 # SC2211: This is a glob used as a command name. Was it supposed to be in ${..}, array, or is it missing quoting?
 
 # m h  dom mon dow   command
+#Ansible: check_ddns.sh
 */5 * * * * /root/scripts/check_ddns.sh
-0 6 * * * /root/scripts/gdrive_backup.sh -a nagios-drewserv -d /var/lib/snapd/snap/bin -f Backup/Web -l gdrive_backup_nagios-drewserv.txt -s
+#Ansible: gdrive_backup.sh
+0 23 * * * /root/scripts/gdrive_backup.sh -a nagios-drewserv -d /var/lib/snapd/snap/bin -f Backup/Web -l /root/scripts/gdrive_backup_nagios-drewserv.txt -s
+#Ansible: check_docker.sh
 */1 * * * * /root/scripts/check_docker.sh
