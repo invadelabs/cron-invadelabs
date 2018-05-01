@@ -12,7 +12,7 @@ LOCK_FILE="/tmp/docker.down"
 
 slack_msg () {
   if [ ! -f /root/scripts/slacktee.sh ]; then
-    curl -o /root/scripts/slacktee.sh https://raw.githubusercontent.com/course-hero/slacktee/master/slacktee.sh
+    curl -sS -o /root/scripts/slacktee.sh https://raw.githubusercontent.com/course-hero/slacktee/master/slacktee.sh
     chmod 755 /root/scripts/slacktee.sh
   fi
   echo "Container $CONTAINER is $1 on $HOSTNAME" | \
