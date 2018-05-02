@@ -11,7 +11,7 @@ format_ansi2html () {
     chmod 755 /root/scripts/ansi2html.sh
   fi
 
-  /root/ansi2html.sh --bg=dark
+  /root/scripts/ansi2html.sh --bg=dark
 }
 
 mail_it () {
