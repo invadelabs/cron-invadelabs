@@ -83,8 +83,9 @@ mediawiki_to_git_md () {
 adjust_repo () {
   CONFIGYML="theme: jekyll-theme-primer"
   echo "$CONFIGYML" > "$GITDIR"/_config.yml
-  git add _config.yml
-  git commit -m "add _config.yml"
+  echo "wiki.invadelabs.com" > "$GITDIR"/CNAME
+  git add _config.yml CNAME
+  git commit -m "add _config.yml CNAME"
 
   mv Main_Page.md index.md
   cp index.md README.md
