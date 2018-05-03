@@ -59,7 +59,7 @@ DATE=$(date '+%Y%m%d%H%M%S%z')
 
 # pack everything into a tar.xz
 backup () {
-  tar -cJf /root/"$ARCHIVE"."$DATE".tar.xz -T "$FILELIST"
+  tar -I pxz -cf /root/"$ARCHIVE"."$DATE".tar.xz -T "$FILELIST"
   sha256sum /root/"$ARCHIVE"."$DATE".tar.xz > /root/"$ARCHIVE"."$DATE".tar.xz.sha256
 }
 
