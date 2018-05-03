@@ -7,7 +7,7 @@ run_lynis () {
 
 format_ansi2html () {
   if [ ! -f /root/scripts/ansi2html.sh ]; then
-    curl  -sS -O /root/scripts/ansi2html.sh https://raw.githubusercontent.com/pixelb/scripts/master/scripts/ansi2html.sh
+    curl  -sS -o /root/scripts/ansi2html.sh https://raw.githubusercontent.com/pixelb/scripts/master/scripts/ansi2html.sh
     chmod 755 /root/scripts/ansi2html.sh
   fi
 
