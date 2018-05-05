@@ -1,4 +1,3 @@
--C /etc apache2/
 -C /etc letsencrypt/
 -C /var/www/drew.invadelabs.com LocalSettings.php
 -C /var/www/data drew_wiki.sqlite
