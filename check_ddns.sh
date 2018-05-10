@@ -1,7 +1,7 @@
 #!/bin/bash
 # Drew Holt <drew@invadelabs.com>
 
-DDNS_HOST=parents.invadelabs.com
+DDNS_HOST=nm.invadelabs.com
 
 IP="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 DDNS_IP="$(dig +short @8.8.8.8 $DDNS_HOST)"
