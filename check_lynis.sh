@@ -2,7 +2,7 @@
 # Drew Holt <drew@invadelabs.com>
 
 run_lynis () {
-  /usr/sbin/lynis audit system
+  lynis audit system
 }
 
 format_ansi2html () {
@@ -15,7 +15,7 @@ format_ansi2html () {
 }
 
 mail_it () {
-  mailx -a 'Content-Type: text/html' -s "Lynis Audit: invadelabs.com" drew@invadelabs.com
+  mailx -a 'Content-Type: text/html' -s "Lynis Audit: $HOSTNAME" drew@invadelabs.com
 }
 
 run_lynis | format_ansi2html | mail_it
