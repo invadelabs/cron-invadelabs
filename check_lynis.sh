@@ -16,7 +16,7 @@ format_ansi2html () {
 
 mail_it () {
   case "$(lsb_release -i -s)" in
-    Ubuntu)
+    Ubuntu|Debian|Raspbian)
       mailx -a 'Content-Type: text/html' -s "Lynis Audit: $HOSTNAME" "$1"
       ;;
     Fedora)
