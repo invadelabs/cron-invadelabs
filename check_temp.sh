@@ -2,7 +2,9 @@
 # Drew Holt <drew@invadelabs.com>
 # https://github.com/invadelabs/cron-invadelabs/blob/master/check_temp.sh
 # Nagios plugin to check temperature from specified /sys entry.
-# v0.0.1 - check_temp.sh 
+#
+# v0.0.2 - 2018/05/20 divide by 1000 when temp is 5 chars long
+# v0.0.1 - 2018/05/20 initial check_temp.sh script written
 #
 # shellcheck disable=SC2194
 # SC2194: This word is constant. Did you forget the $ on a variable?
@@ -56,10 +58,11 @@ elif [ "$WARN" -eq "$CRIT" ]; then
 fi
 
 # if temperature is 2 chars (ex: 56'C), make it look like (ex: 56.000C), else divide by 1000
-if [ "${#DEVICE}" == "2" ]; then
+LEN_DEV="$(cat "$DEVICE")"
+if [ "${#LEN_DEV}" == "2" ]; then
   TEMP_SHORT="$(cat "$DEVICE")"
   TEMP_LONG="$(echo "scale=3; $(cat "$DEVICE") " | bc)"
-elif [ "${#DEVICE}" == "3" ]; then
+elif [ "${#LEN_DEV}" == "3" ]; then
   echo "UNKNOWN: $(cat "$DEVICE") is out of bounds or extremely warm."
   exit 1
 else
