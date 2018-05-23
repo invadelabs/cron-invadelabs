@@ -1,5 +1,9 @@
 #!/bin/bash
 # Drew Holt <drew@invadelabs.com>
+# https://github.com/invadelabs/cron-invadelabs/blob/master/check_lynis.sh
+# cron; 59 4 * * 6 /root/scripts/check_lynis.sh
+#
+# Script to email lynis system audit
 
 run_lynis () {
   lynis audit system

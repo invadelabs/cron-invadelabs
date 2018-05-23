@@ -1,8 +1,10 @@
 #!/bin/bash
 # Drew Holt <drew@invadelabs.com>
-# Slack one message if the docker containers running state is false
-# Slack one message once it's running state is true
-# /root/check_docker.sh
+# https://github.com/invadelabs/cron-invadelabs/blob/master/check_docker.sh
+# cron; */1 * * * * /root/scripts/check_docker.sh
+#
+# Slack one message if container isn't running
+# Slack one message when the container is running again
 
 CONTAINER="nagios4"
 STATUS="$(docker inspect -f '{{.State.Running}}' $CONTAINER)"

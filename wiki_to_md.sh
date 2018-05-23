@@ -1,6 +1,9 @@
 #!/bin/bash
 # Drew Holt <drew@invadelabs.com>
+# https://github.com/invadelabs/cron-invadelabs/blob/master/wiki_to_md.sh
+#
 # convert mediawiki to md and git commit on cron
+# e.x.: ./wiki_to_md.sh &> /dev/null
 #
 # shellcheck disable=SC1117,SC2034
 # SC1117: Backslash is literal in "\n". Prefer explicit escaping: "\\n".
@@ -16,8 +19,6 @@
 # add key to ~/.ssh/my-github-key
 # chmod 400 ~/.ssh/my-github-key
 # add github personal token to ~/token
-#
-# usage: ./wiki_to_md.sh &> /dev/null
 
 SITE="drew.invadelabs.com"
 DIR="/var/www/$SITE"

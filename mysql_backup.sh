@@ -4,8 +4,9 @@
 # mysql_backup.sh
 # Simple mysql backup script
 
-USER=
-PW=
+HOST="localhost"
+USER=""
+PW=""
 DIR=/backup/mysql
 DATE=$(date '+%Y%m%d%H%M%S%z')
 
@@ -13,7 +14,7 @@ echo Running: "$DATE";
 
 # dump databases drewwiki and mysql
 dump_sql () {
-  mysqldump -u"$USER" -p"$PW" --databases drewwiki mysql
+  mysqldump -h "$HOST" -u "$USER" -p "$PW" --databases drewwiki mysql
 }
 
 # create xz archive with hostname and date run
