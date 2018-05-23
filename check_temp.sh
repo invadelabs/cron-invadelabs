@@ -1,6 +1,7 @@
 #!/bin/bash
 # Drew Holt <drew@invadelabs.com>
 # https://github.com/invadelabs/cron-invadelabs/blob/master/check_temp.sh
+#
 # Nagios plugin to check temperature from specified /sys entry.
 #
 # v0.0.2 - 2018/05/20 divide by 1000 when temp is 5 chars long

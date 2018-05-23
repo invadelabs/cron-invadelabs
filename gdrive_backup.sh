@@ -1,6 +1,11 @@
 #!/bin/bash
 # Drew Holt <drew@invadelabs.com>
-# create an archive, upload it to google drive, send status to slack and email
+# https://github.com/invadelabs/cron-invadelabs/blob/master/gdrive_backup.sh
+# cron; 0 23 * * * /root/scripts/gdrive_backup.sh -a nagios-drewserv -d /var/lib/snapd/snap/bin -f Backup/Web -l /root/scripts/gdrive_drewserv.txt -s
+# cron; 0 5 * * * /root/scripts/gdrive_backup.sh -a invadelabs.com -d /snap/bin -f Backup/Web -l /root/scripts/gdrive_invadelabs.com.txt -s
+#
+# create an archive, upload it to google drive, send status to slack and/or email
+#
 # requires https://github.com/odeke-em/drive initialized in cwd
 # slack requires https://github.com/course-hero/slacktee configured in path
 

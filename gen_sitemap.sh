@@ -1,12 +1,13 @@
 #!/bin/bash
 # Drew Holt <drew@invadelabs.com>
+# https://github.com/invadelabs/cron-invadelabs/blob/master/gen_sitemap.sh
+# cron; 0 5 * * * /root/scripts/gen_sitemap.sh -s
+#
+# create a new sitemap of media wiki on cron
+# slack requires https://github.com/course-hero/slacktee configured in path
 #
 # shellcheck disable=SC1117
 # SC1117: Backslash is literal in "\n". Prefer explicit escaping: "\\n".
-#
-# gen_sitemap.sh
-# create a new sitemap of media wiki on cron
-# slack requires https://github.com/course-hero/slacktee configured in path
 
 SITE="drew.invadelabs.com"
 DIR="/var/www/$SITE/sitemap"

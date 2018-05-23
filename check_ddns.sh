@@ -1,5 +1,9 @@
 #!/bin/bash
 # Drew Holt <drew@invadelabs.com>
+# https://github.com/invadelabs/cron-invadelabs/blob/master/check_ddns.sh
+# cron; */5 * * * * /root/scripts/check_ddns.sh
+#
+# Script to update google domains ddns with netrc credentials file
 
 DDNS_HOST=nm.invadelabs.com
 

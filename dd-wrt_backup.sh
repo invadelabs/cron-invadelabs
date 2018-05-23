@@ -1,10 +1,11 @@
 #!/bin/sh
 # Drew Holt <drew@invadelabs.com>
-# script to backup cfe.bin nvrambak.bin and traffdata.bak for DD-WRT
+# script to backup dd-wrt; cfe.bin nvrambak.bin traffdata.bak
 
 IP_ADDR="192.168.1.1"
 USER=""
 PASS=""
+
 DATE=$(date '+%Y%m%d%H%M%S%z')
 DIR="/backup/dd-wrt"
 LOGFILE="$DIR/dd-wrt_backup.log"
