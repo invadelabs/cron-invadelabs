@@ -5,6 +5,8 @@
 #
 # Script to email lynis system audit
 
+PATH="/usr/sbin:$PATH"
+
 run_lynis () {
   lynis audit system
 }
