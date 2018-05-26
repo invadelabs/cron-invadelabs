@@ -1,14 +1,41 @@
 #!/bin/bash
 # Drew Holt <drew@invadelabs.com>
 # https://github.com/invadelabs/cron-invadelabs/blob/master/check_ddns.sh
-# cron; */5 * * * * /root/scripts/check_ddns.sh
+# cron; */5 * * * * /root/scripts/check_ddns.sh nm.invadelabs.com
 #
 # Script to update google domains ddns with netrc credentials file
 
-DDNS_HOST=nm.invadelabs.com
+# DDNS_HOST=nm.invadelabs.com
+DDNS_HOST="$1"
 
-IP="$(dig +short myip.opendns.com @resolver1.opendns.com)"
-DDNS_IP="$(dig +short @8.8.8.8 $DDNS_HOST)"
+usage () {
+  echo "${0} - update Google Domains DDNS"
+  echo "e.x.: $0 nm.invadelabs.com"
+}
+
+valid_ip () {
+  local  ip=$1
+  local  stat=1
+
+  if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+    OIFS=$IFS
+    IFS='.'
+    ip=($ip)
+    IFS=$OIFS
+    [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 \
+      && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+    stat=$?
+  fi
+  return $stat
+}
+
+if [ -z "$1" ]; then
+  usage
+  exit 1
+fi
+
+IP="$(dig +short myip.opendns.com @resolver1.opendns.com || true)"
+DDNS_IP="$(dig +short @8.8.8.8 "$DDNS_HOST" || true)"
 DATE="$(date '+%Y-%m-%d-%H:%M:%S%z')"
 
 slack_msg () {
@@ -29,10 +56,14 @@ slack_msg () {
   # -p \
 }
 
-if [ ! "$IP" == "$DDNS_IP" ]; then
+if [ ! "$IP" == "$DDNS_IP" ] && valid_ip "$IP"; then
   CURL="$(curl --netrc-file /root/check_ddns.cred -sS "https://domains.google.com/nic/update?hostname=$DDNS_HOST&myip=$IP")"
 
-  slack_msg "$DDNS_HOST IP updated on $DATE with $CURL"
+  slack_msg "$DDNS_HOST IP updated on $DATE to $CURL from $DDNS_IP"
+elif [ "$IP" == "$DDNS_IP" ]; then
+  exit 0
+else
+  slack_msg "$( echo -e "Something went wrong. \nDate: ${DATE} \nIP: $IP \nDDNS IP: $DDNS_IP \nDDNS Host: $DDNS_HOST")"
 fi
 
 # https://user:pass@domains.google.com/nic/update?hostname=$DDNS_HOST&myip=$IP
