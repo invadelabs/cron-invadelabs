@@ -1,9 +1,9 @@
 #!/bin/bash
 # Drew Holt <drew@invadelabs.com>
 # https://github.com/invadelabs/cron-invadelabs/blob/master/check_temp.sh
-#
 # Nagios plugin to check temperature from specified /sys entry.
 #
+# v0.0.3 - 2018/05/29 correct exit codes for nagios
 # v0.0.2 - 2018/05/20 divide by 1000 when temp is 5 chars long
 # v0.0.1 - 2018/05/20 initial check_temp.sh script written
 #
@@ -40,22 +40,22 @@ if [ -z "$1" ]; then
   usage
 elif [ ! -f "$DEVICE" ]; then
   echo "UNKNOWN: $DEVICE does not exist."
-  exit 1
+  exit 3
 elif [ -z "$WARN" ] && [ -z "$CRIT" ]; then
   echo "UNKNOWN: Missing warning and critical temperature."
-  exit 1
+  exit 3
 elif [ -z "$WARN" ]; then
   echo "UNKNOWN: No warning temperature specified."
-  exit 1
+  exit 3
 elif [ -z "$CRIT" ]; then
   echo "UNKNOWN: No critical temperature specified."
-  exit 1
+  exit 3
 elif [ "$WARN" -gt "$CRIT" ]; then
   echo "UNKNOWN: Warning temperature cannot be greater than critical temperature."
-  exit 1
+  exit 3
 elif [ "$WARN" -eq "$CRIT" ]; then
   echo "UNKNOWN: Warning temperature cannot equal critical temperature."
-  exit 1
+  exit 3
 fi
 
 # if temperature is 2 chars (ex: 56'C), make it look like (ex: 56.000C), else divide by 1000
@@ -76,12 +76,16 @@ fi
 case 1 in
   $((TEMP_SHORT>= CRIT )))
     STATE=CRITICAL
+    echo "Temp ${STATE}: ${TEMP_LONG}ºC $DEVICE | temp=${TEMP_LONG};;;"
+    exit 2
     ;;
   $((TEMP_SHORT>= WARN )))
     STATE=WARNING
+    echo "Temp ${STATE}: ${TEMP_LONG}ºC $DEVICE | temp=${TEMP_LONG};;;"
+    exit 1
     ;;
   *)
     STATE=OK
+    exit 0
+    echo "Temp ${STATE}: ${TEMP_LONG}ºC $DEVICE | temp=${TEMP_LONG};;;"
 esac
-
-echo "Temp ${STATE}: ${TEMP_LONG}ºC $DEVICE | temp=${TEMP_LONG};;;"
