@@ -28,14 +28,14 @@ slack_msg () {
 
 for CONTAINER in $LIST; do
 
-  STATUS="$(docker inspect -f '{{.State.Running}}' $CONTAINER)"
+  STATUS="$(docker inspect -f '{{.State.Running}}' "$CONTAINER")"
   IP="$(hostname -I | cut -f1 -d" ")"
-  DOCKER_STATUS="$(docker ps -a | grep $CONTAINER)"
+  DOCKER_STATUS="$(docker ps -a | grep "$CONTAINER")"
   LOCK_FILE="/tmp/docker.down-$CONTAINER"
 
   case "$STATUS" in
     false)
-      if [ ! -f $LOCK_FILE ]; then
+      if [ ! -f "$LOCK_FILE" ]; then
         MESSAGE="not running"
         COLOR="danger"
         slack_msg "$MESSAGE" "$COLOR"
@@ -44,7 +44,7 @@ for CONTAINER in $LIST; do
       fi
       ;;
     true)
-      if [ -f $LOCK_FILE ]; then
+      if [ -f "$LOCK_FILE" ]; then
         MESSAGE="running"
         COLOR="good"
         slack_msg "$MESSAGE" "$COLOR"
