@@ -6,11 +6,7 @@
 # Slack one message if container isn't running
 # Slack one message when the container is running again
 
-CONTAINER="nagios4"
-STATUS="$(docker inspect -f '{{.State.Running}}' $CONTAINER)"
-IP="$(hostname -I | cut -f1 -d" ")"
-DOCKER_STATUS="$(docker ps -a | grep $CONTAINER)"
-LOCK_FILE="/tmp/docker.down"
+LIST="nagios4 gitlab"
 
 slack_msg () {
   if [ ! -f /root/scripts/slacktee.sh ]; then
@@ -30,26 +26,35 @@ slack_msg () {
   -l http://"$IP":8080 > /dev/null;
 }
 
-case "$STATUS" in
-  false)
-    if [ ! -f $LOCK_FILE ]; then
-      MESSAGE="not running"
-      COLOR="danger"
-      slack_msg "$MESSAGE" "$COLOR"
-      # create a lock file to only alert once
-      touch "$LOCK_FILE"
-    fi
-    ;;
-  true)
-    if [ -f $LOCK_FILE ]; then
-      MESSAGE="running"
-      COLOR="good"
-      slack_msg "$MESSAGE" "$COLOR"
-      # remove lock file
-      rm "$LOCK_FILE"
-    fi
-    ;;
-  *)
-    echo "$STATUS $DOCKER_STATUS"
-    exit 1
-esac
+for CONTAINER in $LIST; do
+
+  STATUS="$(docker inspect -f '{{.State.Running}}' $CONTAINER)"
+  IP="$(hostname -I | cut -f1 -d" ")"
+  DOCKER_STATUS="$(docker ps -a | grep $CONTAINER)"
+  LOCK_FILE="/tmp/docker.down-$CONTAINER"
+
+  case "$STATUS" in
+    false)
+      if [ ! -f $LOCK_FILE ]; then
+        MESSAGE="not running"
+        COLOR="danger"
+        slack_msg "$MESSAGE" "$COLOR"
+        # create a lock file to only alert once
+        touch "$LOCK_FILE"
+      fi
+      ;;
+    true)
+      if [ -f $LOCK_FILE ]; then
+        MESSAGE="running"
+        COLOR="good"
+        slack_msg "$MESSAGE" "$COLOR"
+        # remove lock file
+        rm "$LOCK_FILE"
+      fi
+      ;;
+    *)
+      echo "$STATUS $DOCKER_STATUS"
+      exit 1
+  esac
+
+done
