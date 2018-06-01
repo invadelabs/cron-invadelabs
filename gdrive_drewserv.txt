@@ -1,4 +1,7 @@
 --exclude nagios4/var/rw/nagios.qh
 -C /srv nagios4/
 --exclude gitlab/data/gitaly/gitaly.socket
+--exclude gitlab/data/gitlab-rails/sockets/gitlab.socket
+--exclude gitlab/data/redis/redis.socket
+--exclude gitlab/data/gitlab-workhorse/socket
 -C /srv gitlab/
