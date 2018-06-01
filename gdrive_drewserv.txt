@@ -1,2 +1,3 @@
 --exclude nagios4/var/rw/nagios.qh
 -C /srv nagios4/
+-C /srv gitlab/
