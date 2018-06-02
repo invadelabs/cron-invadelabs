@@ -4,4 +4,5 @@
 --exclude gitlab/data/gitlab-rails/sockets/gitlab.socket
 --exclude gitlab/data/redis/redis.socket
 --exclude gitlab/data/gitlab-workhorse/socket
+--exclude gitlab/data/postgresql/.s.PGSQL.5432
 -C /srv gitlab/
