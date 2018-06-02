@@ -6,3 +6,5 @@
 --exclude gitlab/data/gitlab-workhorse/socket
 --exclude gitlab/data/postgresql/.s.PGSQL.5432
 -C /srv gitlab/
+-C /srv bind/
+-C /srv icinga2/
