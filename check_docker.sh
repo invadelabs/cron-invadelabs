@@ -6,7 +6,7 @@
 # Slack one message if container isn't running
 # Slack one message when the container is running again
 
-LIST="nagios4 gitlab"
+LIST="nagios4 gitlab bind"
 
 slack_msg () {
   if [ ! -f /root/scripts/slacktee.sh ]; then
