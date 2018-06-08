@@ -6,13 +6,8 @@
 #
 # create an archive, upload it to google drive, send status to slack and/or email
 #
-# requires https://github.com/odeke-em/drive initialized in cwd
+# requires https://github.com/odeke-em/drive initialized in $PWD
 # slack requires https://github.com/course-hero/slacktee configured in path
-
-# ARCHIVE="invadelabs.com"
-# DRIVE_BIN_PATH="/snap/bin"
-# EMAIL_TO="drew@invadelabs.com"
-# GDRIVE_FOLDER="Backup/Web" # no leading slash
 
 usage () {
     echo "usage: $(basename "$0") -a archivename -d /snap/bin -f Backup/Web -l gdrive_backup_invadelabs.com.txt -e my@email.com -s"
@@ -27,10 +22,6 @@ usage () {
     echo "  -s               use slack"
     exit 1
 }
-
-if [ "$1" == "" ]; then
-  usage
-fi
 
 # note no : after s
 while getopts a:d:e:f:l:s option
@@ -50,6 +41,10 @@ do
   esac
 done
 
+if [ -z "$1" ]; then
+  usage
+fi
+
 if [ -z "$ARCHIVE" ] || [ -z "$DRIVE_BIN_PATH" ] || [ -z "$GDRIVE_FOLDER" ] || [ -z "$FILELIST" ]; then
   echo "Need an archive name, path to drive binary, destination path, and file list. ex:"
   echo "./gdrive_backup.sh -a invadelabs.com -d /snap/bin -f Backup/Web -l gdrive_backup_invadelabs.com.txt"
@@ -68,14 +63,13 @@ backup () {
   sha256sum /root/"$ARCHIVE"."$DATE".tar.xz > /root/"$ARCHIVE"."$DATE".tar.xz.sha256
 }
 
-# push archive to google drive,
+# push archive and sha256sum to google drive
 google_push () {
   "$DRIVE_BIN_PATH"/drive push -no-prompt -destination /"$GDRIVE_FOLDER" "$ARCHIVE"."$DATE".tar.xz "$ARCHIVE"."$DATE".tar.xz.sha256 >/dev/null
 }
 
 # remove archive from local disk
 clean_up () {
-  # rm /root/"$ARCHIVE"."$DATE".tar.xz /root/drew_wiki."$DATE".sqlite
   rm /root/"$ARCHIVE"."$DATE".tar.xz
   rm /root/"$ARCHIVE"."$DATE".tar.xz.sha256
 }
