@@ -53,8 +53,14 @@ for CONTAINER in $LIST; do
       fi
       ;;
     *)
-      echo "$STATUS $DOCKER_STATUS"
-      exit 1
+      if [ ! -f "$LOCK_FILE" ]; then
+        MESSAGE="unknown"
+        COLOR="danger"
+        slack_msg "$MESSAGE" "$COLOR"
+        echo "$STATUS $DOCKER_STATUS"
+        touch "$LOCK_FILE"
+        exit 1
+      fi
   esac
 
 done
