@@ -5,9 +5,10 @@
 # convert mediawiki to md and git commit on cron
 # e.x.: ./wiki_to_md.sh &> /dev/null
 #
-# shellcheck disable=SC1117,SC2034
+# shellcheck disable=SC1117,SC2034,SC2129
 # SC1117: Backslash is literal in "\n". Prefer explicit escaping: "\\n".
 # SC2034: GIT_SSH_COMMAND appears unused. Verify it or export it.
+# SC2129: Consider using { cmd1; cmd2; } >> file instead of individual redirects.
 #
 # requires
 # apt-get install pandoc bc
@@ -24,7 +25,6 @@ SITE="drew.invadelabs.com"
 DIR="/var/www/$SITE"
 DATE=$(date '+%Y%m%d%H%M%S%z')
 GITDIR="/tmp/$SITE.$DATE"
-GIT_SSH_COMMAND="ssh -i ~/.ssh/jenkins-invadelabs -o StrictHostKeyChecking=no"
 TOKEN=$(cat /root/github_token)
 
 mkdir "$GITDIR"
@@ -44,7 +44,8 @@ git_init_dir () {
   touch temp
   git add temp
   git commit -m "initial commit"
-  git remote add origin git@github.com:invadelabs/drewwiki.git
+  git remote add origin https://"$TOKEN"@github.com/invadelabs/drewwiki.git
+
   git push --set-upstream origin master
   curl  -H "Authorization: token $TOKEN" \
     -X DELETE https://api.github.com/repos/invadelabs/drewwiki/git/refs/heads/master
@@ -105,7 +106,7 @@ git_reduce_size () {
 }
 
 git_push () {
-  git remote add origin git@github.com:invadelabs/drewwiki.git
+  git remote add origin https://"$TOKEN"@github.com/invadelabs/drewwiki.git
   git push -u origin gh-pages -f
 }
 
@@ -133,11 +134,11 @@ cleanup () {
 
 START=$(date +%s)
 
-git_init_dir &> /dev/null
+git_init_dir &>> /root/drewwiki_log.txt
 export_xml
-mediawiki_to_git_md &> /dev/null
-adjust_repo &> /dev/null
-git_reduce_size &> /dev/null
+mediawiki_to_git_md &>> /root/drewwiki_log.txt
+adjust_repo &>> /root/drewwiki_log.txt
+git_reduce_size &>> /root/drewwiki_log.txt
 STATUS=$(git_push)
 COMMIT="$(git rev-parse HEAD | cut -c -7)"
 
