@@ -68,12 +68,6 @@ google_push () {
   "$DRIVE_BIN_PATH"/drive push -no-prompt -destination /"$GDRIVE_FOLDER" "$ARCHIVE"."$DATE".tar.xz "$ARCHIVE"."$DATE".tar.xz.sha256 >/dev/null
 }
 
-# remove archive from local disk
-clean_up () {
-  rm /root/"$ARCHIVE"."$DATE".tar.xz
-  rm /root/"$ARCHIVE"."$DATE".tar.xz.sha256
-}
-
 # get the status of archive on google drive and strip out ansi colors
 get_stat () {
   "$DRIVE_BIN_PATH"/drive stat "$GDRIVE_FOLDER"/"$ARCHIVE"."$DATE".tar.xz | sed 's/\x1b\[[0-9;]*m//g'
@@ -126,6 +120,12 @@ notify_status () {
   if [ ! -z "$USE_SLACK" ]; then
     slack_msg "$STATUS" > /dev/null;
   fi
+}
+
+# remove archive from local disk
+clean_up () {
+  rm /root/"$ARCHIVE"."$DATE".tar.xz
+  rm /root/"$ARCHIVE"."$DATE".tar.xz.sha256
 }
 
 pack_tar
