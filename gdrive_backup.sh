@@ -58,7 +58,7 @@ fi
 DATE=$(date '+%Y%m%d%H%M%S%z')
 
 # pack everything into a tar.xz
-backup () {
+pack_tar () {
   tar -I pxz -cf /root/"$ARCHIVE"."$DATE".tar.xz -T "$FILELIST"
   sha256sum /root/"$ARCHIVE"."$DATE".tar.xz > /root/"$ARCHIVE"."$DATE".tar.xz.sha256
 }
@@ -112,19 +112,23 @@ slack_msg () {
   #-p # plain text message
 }
 
-# start backup
-backup; google_push; clean_up;
+notify_status () {
+  # set to variables so we don't have to do this twice for email and slack
+  URL=$(get_url)
+  STATUS=$(get_stat)
 
-# set to variables so we don't have to do this twice for email and slack
-URL=$(get_url)
-STATUS=$(get_stat)
+  # if set email status and url of file on google drive
+  if [ ! -z "$EMAIL_TO" ]; then
+    echo "$URL $STATUS" | hl | mailer > /dev/null;
+  fi
 
-# if set email status and url of file on google drive
-if [ ! -z "$EMAIL_TO" ]; then
-  echo "$URL $STATUS" | hl | mailer > /dev/null;
-fi
+  # if set send status and url to slack
+  if [ ! -z "$USE_SLACK" ]; then
+    slack_msg "$STATUS" > /dev/null;
+  fi
+}
 
-# if set send status and url to slack
-if [ ! -z "$USE_SLACK" ]; then
-  slack_msg "$STATUS" > /dev/null;
-fi
+pack_tar
+google_push
+notify_status
+clean_up
