@@ -41,16 +41,20 @@ do
 done
 
 # archive old sitemap.xml
-mv $DIR/sitemap-"$SITE"-NS_0-0.xml $DIR/sitemap-"$SITE"-NS_0-0."$DATE".xml
-xz $DIR/sitemap-"$SITE"-NS_0-0."$DATE".xml
+archive_old () {
+  mv $DIR/sitemap-"$SITE"-NS_0-0.xml $DIR/sitemap-"$SITE"-NS_0-0."$DATE".xml
+  xz $DIR/sitemap-"$SITE"-NS_0-0."$DATE".xml
+}
 
 # generate new sitemap
-NEWSITE=$(php /var/www/"$SITE"/maintenance/generateSitemap.php \
-  --compress no \
-  --fspath=/var/www/"$SITE"/sitemap/ \
-  --identifier="$SITE" \
-  --urlpath=https://"$SITE"/ \
-  --server=https://"$SITE")
+gen_new_sitemap () {
+  NEWSITE=$(php /var/www/"$SITE"/maintenance/generateSitemap.php \
+    --compress no \
+    --fspath=/var/www/"$SITE"/sitemap/ \
+    --identifier="$SITE" \
+    --urlpath=https://"$SITE"/ \
+    --server=https://"$SITE")
+}
 
 # send an email
 mailer () {
@@ -81,11 +85,17 @@ slack_msg () {
 }
 
 # if set send the email
-if [ ! -z "$EMAIL_TO" ]; then
-  echo -e "$URL\n$URL_OLD\n$NEWSITE" | hl | mailer > /dev/null
-fi
+notify_status () {
+  if [ ! -z "$EMAIL_TO" ]; then
+    echo -e "$URL\n$URL_OLD\n$NEWSITE" | hl | mailer > /dev/null
+  fi
 
-# if set send the slack message
-if [ ! -z "$USE_SLACK" ]; then
-  slack_msg "$URL_OLD\n$NEWSITE"  > /dev/null;
-fi
+  # if set send the slack message
+  if [ ! -z "$USE_SLACK" ]; then
+    slack_msg "$URL_OLD\n$NEWSITE"  > /dev/null;
+  fi
+}
+
+archive_old
+gen_new_sitemap
+notify_status
