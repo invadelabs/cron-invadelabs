@@ -25,7 +25,10 @@ clean_up () {
 }
 
 get_latest
+
 if ! compare_tar; then
   extract_latest
+  systemctl reload apache
 fi
+
 clean_up
