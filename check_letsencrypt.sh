@@ -28,7 +28,7 @@ get_latest
 
 if ! compare_tar; then
   extract_latest
-  systemctl reload apache
+  systemctl reload httpd
 fi
 
 clean_up
