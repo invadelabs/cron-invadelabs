@@ -4,6 +4,7 @@
 # cron; */5 * * * * /root/scripts/check_ddns.sh nm.invadelabs.com
 #
 # Script to update google domains ddns with netrc credentials file
+# then update google cloud firewall rule
 
 # DDNS_HOST=nm.invadelabs.com
 DDNS_HOST="$1"
@@ -59,7 +60,8 @@ slack_msg () {
 if [ ! "$IP" == "$DDNS_IP" ] && valid_ip "$IP"; then
   CURL="$(curl --netrc-file /root/check_ddns.cred -sS "https://domains.google.com/nic/update?hostname=$DDNS_HOST&myip=$IP")"
 
-  slack_msg "$DDNS_HOST IP updated on $DATE to $CURL from $DDNS_IP"
+  GCLOUD="$(gcloud compute firewall-rules update ssh-drew-nm1 --source-ranges 174.28.19.52/32)"
+  slack_msg "$DDNS_HOST IP updated on $DATE to $CURL from $DDNS_IP. $GCLOUD"
 elif [ "$IP" == "$DDNS_IP" ]; then
   exit 0
 else
