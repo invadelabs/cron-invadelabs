@@ -59,7 +59,7 @@ slack_msg () {
 
 if [ ! "$IP" == "$DDNS_IP" ] && valid_ip "$IP"; then
   CURL="$(curl --netrc-file /root/check_ddns.cred -sS "https://domains.google.com/nic/update?hostname=$DDNS_HOST&myip=$IP")"
-  GCLOUD="$(gcloud compute firewall-rules update ssh-drew-nm1 --source-ranges $IP/32)"
+  GCLOUD="$(gcloud compute firewall-rules update ssh-drew-nm1 --source-ranges "$IP"/32)"
 
   slack_msg "$DDNS_HOST IP updated on $DATE to $CURL from $DDNS_IP. $GCLOUD"
 elif [ "$IP" == "$DDNS_IP" ]; then
