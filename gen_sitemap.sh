@@ -19,23 +19,18 @@ usage () {
     echo "  requires atleast one of the following:"
     echo "  -e email         email address"
     echo "  -s               use slack"
+    echo "  -h               show this message"
     exit 1
 }
 
-if [ -z "$1" ]; then
-  usage
-fi
-
 # note no : after s
-while getopts e:s option
+while getopts e:sh option
 do
   case "${option}"
   in
   e) EMAIL_TO=${OPTARG};;
   s) USE_SLACK="true";;
-  *)
-    usage
-    exit 1
+  h) usage
     ;;
   esac
 done
