@@ -99,7 +99,7 @@ slack_msg () {
   -e "drive stat $GDRIVE_FOLDER/$ARCHIVE.$DATE.tar.xz" "Command run"\
   -t "$URL" \
   -a good \
-  -c general \
+  -c backup \
   -u "$(basename "$0")" \
   -i floppy_disk \
   -l "$URL" > /dev/null;
