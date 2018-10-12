@@ -35,7 +35,7 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-IP="$(dig +short myip.opendns.com @resolver1.opendns.com || true)"
+IP="$(dig +short myip.opendns.com @resolver1.opendns.com 2>/dev/null || true)"
 DDNS_IP="$(dig +short @8.8.8.8 "$DDNS_HOST" || true)"
 DATE="$(date '+%Y-%m-%d-%H:%M:%S%z')"
 
