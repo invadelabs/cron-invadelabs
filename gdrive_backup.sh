@@ -59,7 +59,8 @@ DATE=$(date '+%Y%m%d%H%M%S%z')
 
 # pack everything into a tar.xz
 pack_tar () {
-  tar -I pxz -cf /root/"$ARCHIVE"."$DATE".tar.xz -T "$FILELIST"
+  # --warning=no-file-changed for "tar: nagios4/var: file changed as we read it"
+  tar -I pxz --warning=no-file-changed -cf /root/"$ARCHIVE"."$DATE".tar.xz -T "$FILELIST"
   sha256sum /root/"$ARCHIVE"."$DATE".tar.xz > /root/"$ARCHIVE"."$DATE".tar.xz.sha256
 }
 
