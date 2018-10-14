@@ -14,6 +14,11 @@ usage () {
   echo "e.x.: $0 nm.invadelabs.com"
 }
 
+if [ -z "$1" ]; then
+  usage
+  exit 1
+fi
+
 valid_ip () {
   local  ip=$1
   local  stat=1
@@ -30,13 +35,8 @@ valid_ip () {
   return $stat
 }
 
-if [ -z "$1" ]; then
-  usage
-  exit 1
-fi
-
 IP="$(dig +short myip.opendns.com @resolver1.opendns.com 2>/dev/null || true)"
-DDNS_IP="$(dig +short @8.8.8.8 "$DDNS_HOST" || true)"
+DDNS_IP="$(dig +short @8.8.8.8 "$DDNS_HOST" 2>/dev/null || true)"
 DATE="$(date '+%Y-%m-%d-%H:%M:%S%z')"
 
 slack_msg () {
@@ -58,11 +58,16 @@ slack_msg () {
 }
 
 if [ ! "$IP" == "$DDNS_IP" ] && valid_ip "$IP"; then
+  # update google domains ddns
   CURL="$(curl --netrc-file /root/check_ddns.cred -sS "https://domains.google.com/nic/update?hostname=$DDNS_HOST&myip=$IP")"
+  # update gcp firewall rule
   GCLOUD="$(/var/lib/snapd/snap/bin/gcloud compute firewall-rules update ssh-drew-nm1 --source-ranges "$IP"/32)"
 
   slack_msg "$DDNS_HOST IP updated on $DATE to $CURL from $DDNS_IP. $GCLOUD"
 elif [ "$IP" == "$DDNS_IP" ]; then
+  exit 0
+elif [ -z "$IP" ]; then
+  # if we end up here the link or dns is down
   exit 0
 else
   slack_msg "$( echo -e "Something went wrong. \nDate: ${DATE} \nIP: $IP \nDDNS IP: $DDNS_IP \nDDNS Host: $DDNS_HOST")"
