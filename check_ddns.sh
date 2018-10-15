@@ -63,7 +63,7 @@ if [ ! "$IP" == "$DDNS_IP" ] && valid_ip "$IP"; then
   # update gcp firewall rule
   GCLOUD="$(/var/lib/snapd/snap/bin/gcloud compute firewall-rules update ssh-drew-nm1 --source-ranges "$IP"/32)"
 
-  slack_msg "$DDNS_HOST IP updated on $DATE to $CURL from $DDNS_IP. $GCLOUD"
+  slack_msg "$( echo -e "${DDNS_HOST} IP Updated: \nDate Run: ${DATE} \nNew IP: $IP \Old IP: $DDNS_IP \nCurl Output: ${CURL} \nGcloud Output: ${GCLOUD}")"
 elif [ "$IP" == "$DDNS_IP" ]; then
   exit 0
 elif [ -z "$IP" ]; then
