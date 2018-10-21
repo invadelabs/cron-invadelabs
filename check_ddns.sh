@@ -61,7 +61,7 @@ if [ ! "$IP" == "$DDNS_IP" ] && valid_ip "$IP"; then
   # update google domains ddns
   CURL="$(curl --netrc-file /root/check_ddns.cred -sS "https://domains.google.com/nic/update?hostname=$DDNS_HOST&myip=$IP")"
   # update gcp firewall rule
-  GCLOUD="$(/var/lib/snapd/snap/bin/gcloud compute firewall-rules update ssh-drew-nm1 --source-ranges "$IP"/32)"
+  /var/lib/snapd/snap/bin/gcloud compute firewall-rules update ssh-drew-nm1 --source-ranges "$IP"/32 2>/dev/null
 
   slack_msg "$( echo -e "${DDNS_HOST} IP Updated: \nDate Run: ${DATE} \nNew IP: $IP \Old IP: $DDNS_IP \nCurl Output: ${CURL} \nGcloud Output: ${GCLOUD}")"
 elif [ "$IP" == "$DDNS_IP" ]; then
