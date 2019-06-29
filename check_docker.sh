@@ -6,7 +6,7 @@
 # Slack one message if container isn't running
 # Slack one message when the container is running again
 
-LIST="nagios4 bind dockerelk_logstash_1 dockerelk_kibana_1 dockerelk_elasticsearch_1 nightscout"
+LIST="nagios4 bind dockerelk_logstash dockerelk_kibana dockerelk_elasticsearch nightscout"
 
 slack_msg () {
   if [ ! -f /root/scripts/slacktee.sh ]; then
