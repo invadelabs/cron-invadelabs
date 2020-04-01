@@ -1,6 +1,9 @@
 language: bash
 sudo: required
 dist: trusty
+branches:
+  only:
+    - master
 before_install:
 - sudo apt-add-repository "deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse"
 - sudo apt-get -qq update
