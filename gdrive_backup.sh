@@ -1,19 +1,22 @@
 #!/bin/bash
 # Drew Holt <drew@invadelabs.com>
 # https://github.com/invadelabs/cron-invadelabs/blob/master/gdrive_backup.sh
-# cron; 0 23 * * * /root/scripts/gdrive_backup.sh -a nagios-drewserv -d /var/lib/snapd/snap/bin -f Backup/Web -l /root/scripts/gdrive_drewserv.txt -s
-# cron; 0 5 * * * /root/scripts/gdrive_backup.sh -a invadelabs.com -d /snap/bin -f Backup/Web -l /root/scripts/gdrive_invadelabs.com.txt -s
+#
+# cron; 0 23 * * * /root/scripts/gdrive_backup.sh -a drewserv -f googledrive:/Backup/Web -l /root/scripts/gdrive_drewserv.txt -s
+# cron; 0 23 * * * /root/scripts/gdrive_backup.sh -a invadelabs.com -f googledrive:/Backup/Web -l /root/scripts/gdrive_invadelabs.com.txt -s
 #
 # create an archive, upload it to google drive, send status to slack and/or email
 #
-# requires https://github.com/odeke-em/drive initialized in $PWD
+# rclone requires https://rclone.org/ configured for googledrive
+# apt install rclone / dnf install rclone
 # slack requires https://github.com/course-hero/slacktee configured in path
+# highlight;
+# apt install highlight
 
 usage () {
-    echo "usage: $(basename "$0") -a archivename -d /snap/bin -f Backup/Web -l gdrive_backup_invadelabs.com.txt -e my@email.com -s"
+    echo "usage: $(basename "$0") -a archivename -f googledrive:/Backup/Web -l gdrive_backup_invadelabs.com.txt -e my@email.com -s"
     echo "  required:"
     echo "  -a archive       name of archive"
-    echo "  -d /snap/bin     path to drive binary"
     echo "  -f Backup/Web    path to gdrive archive folder without leading slash"
     echo "  -l list.txt      list of files to add to archive"
     echo ""
@@ -24,14 +27,13 @@ usage () {
 }
 
 # note no : after s
-while getopts a:d:e:f:l:s option
+while getopts a:e:f:l:s option
 do
   case "${option}"
   in
   a) ARCHIVE=${OPTARG};;
-  d) DRIVE_BIN_PATH=${OPTARG};;
   e) EMAIL_TO=${OPTARG};;
-  f) GDRIVE_FOLDER=${OPTARG};;
+  f) DESTINATION=${OPTARG};;
   l) FILELIST=${OPTARG};;
   s) USE_SLACK="true";;
   *)
@@ -45,9 +47,9 @@ if [ -z "$1" ]; then
   usage
 fi
 
-if [ -z "$ARCHIVE" ] || [ -z "$DRIVE_BIN_PATH" ] || [ -z "$GDRIVE_FOLDER" ] || [ -z "$FILELIST" ]; then
-  echo "Need an archive name, path to drive binary, destination path, and file list. ex:"
-  echo "./gdrive_backup.sh -a invadelabs.com -d /snap/bin -f Backup/Web -l gdrive_backup_invadelabs.com.txt"
+if [ -z "$ARCHIVE" ] || [ -z "$DESTINATION" ] || [ -z "$FILELIST" ]; then
+  echo "Need an archive name, destination path, and file list. ex:"
+  echo "./gdrive_backup.sh -a invadelabs.com -f googledrive:/Backup/Web -l gdrive_backup_invadelabs.com.txt"
   exit 1
 elif [ -z "$EMAIL_TO" ] && [ -z "$USE_SLACK" ]; then
   echo "Need to set atleast one of -e or -s. ex:"
@@ -60,23 +62,33 @@ DATE=$(date '+%Y%m%d%H%M%S%z')
 # pack everything into a tar.xz
 pack_tar () {
   # --warning=no-file-changed for "tar: nagios4/var: file changed as we read it"
-  tar -I pxz --warning=no-file-changed -cf /root/"$ARCHIVE"."$DATE".tar.xz -T "$FILELIST"
-  sha256sum /root/"$ARCHIVE"."$DATE".tar.xz > /root/"$ARCHIVE"."$DATE".tar.xz.sha256
+  tar -I "pxz -T 0" --warning=no-file-changed -cf /root/"$ARCHIVE"."$DATE".tar.xz -T "$FILELIST"
 }
 
 # push archive and sha256sum to google drive
-google_push () {
-  "$DRIVE_BIN_PATH"/drive push -no-prompt -destination /"$GDRIVE_FOLDER" "$ARCHIVE"."$DATE".tar.xz "$ARCHIVE"."$DATE".tar.xz.sha256 >/dev/null
+cloud_push () {
+  rclone copy /root/"$ARCHIVE"."$DATE".tar.xz "$DESTINATION"
+}
+
+check_md5 () {
+  A=$(md5sum /root/"$ARCHIVE"."$DATE".tar.xz | cut -d" " -f1)
+  B=$(rclone md5sum -v "$DESTINATION"/"$ARCHIVE"."$DATE".tar.xz | cut -d" " -f1)
+  if [[ "$A" == "$B" ]]; then
+    echo "md5sum: $A"
+  else
+    echo "md5sum FAILED $A != $B"
+  fi
 }
 
 # get the status of archive on google drive and strip out ansi colors
 get_stat () {
-  "$DRIVE_BIN_PATH"/drive stat "$GDRIVE_FOLDER"/"$ARCHIVE"."$DATE".tar.xz | sed 's/\x1b\[[0-9;]*m//g'
+  rclone lsjson -v "$DESTINATION"/"$ARCHIVE"."$DATE".tar.xz | jq -M -c '.[]';
+  check_md5
 }
 
 # get url of archive on google drive
 get_url () {
-  "$DRIVE_BIN_PATH"/drive url "$GDRIVE_FOLDER"/"$ARCHIVE"."$DATE".tar.xz | cut -d" " -f 2
+  rclone link  "$DESTINATION"/"$ARCHIVE"."$DATE".tar.xz
 }
 
 # creates text output as preformatted html
@@ -90,14 +102,9 @@ mailer () {
 }
 
 slack_msg () {
-  if [ ! -f /root/scripts/slacktee.sh ]; then
-    curl -sS -o /root/scripts/slacktee.sh https://raw.githubusercontent.com/course-hero/slacktee/master/slacktee.sh
-    chmod 755 /root/scripts/slacktee.sh
-  fi
-  echo "$1" | \
-  /root/scripts/slacktee.sh \
+  echo "$1" | slacktee.sh \
   --config /root/slacktee.conf \
-  -e "drive stat $GDRIVE_FOLDER/$ARCHIVE.$DATE.tar.xz" "Command run"\
+  -e "rclone lsjson $DESTINATION/$ARCHIVE.$DATE.tar.xz" "Command run"\
   -t "$URL" \
   -a good \
   -c backup \
@@ -113,12 +120,12 @@ notify_status () {
   STATUS=$(get_stat)
 
   # if set email status and url of file on google drive
-  if [ ! -z "$EMAIL_TO" ]; then
+  if [ -n "$EMAIL_TO" ]; then
     echo "$URL $STATUS" | hl | mailer > /dev/null;
   fi
 
   # if set send status and url to slack
-  if [ ! -z "$USE_SLACK" ]; then
+  if [ -n "$USE_SLACK" ]; then
     slack_msg "$STATUS" > /dev/null;
   fi
 }
@@ -126,10 +133,9 @@ notify_status () {
 # remove archive from local disk
 clean_up () {
   rm /root/"$ARCHIVE"."$DATE".tar.xz
-  rm /root/"$ARCHIVE"."$DATE".tar.xz.sha256
 }
 
 pack_tar
-google_push
+cloud_push
 notify_status
 clean_up
