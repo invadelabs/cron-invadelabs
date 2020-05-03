@@ -3,6 +3,7 @@
 # https://github.com/invadelabs/cron-invadelabs/blob/master/check_docker.sh
 # cron; */1 * * * * /root/scripts/check_docker.sh
 #
+# requires slacktee.sh in $PATH
 # Slack one message if container isn't running
 # Slack one message when the container is running again
 
@@ -10,12 +11,7 @@
 LIST="nagios4 bind nightscout"
 
 slack_msg () {
-  if [ ! -f /root/scripts/slacktee.sh ]; then
-    curl -sS -o /root/scripts/slacktee.sh https://raw.githubusercontent.com/course-hero/slacktee/master/slacktee.sh
-    chmod 755 /root/scripts/slacktee.sh
-  fi
-  echo "Container $CONTAINER is $1 on $HOSTNAME" | \
-  /root/scripts/slacktee.sh \
+  echo "Container $CONTAINER is $1 on $HOSTNAME" | slacktee.sh \
   --config /root/slacktee.conf \
   -e "docker ps -a" "$DOCKER_STATUS "\
   -t "Container $CONTAINER is $1 on $HOSTNAME" \

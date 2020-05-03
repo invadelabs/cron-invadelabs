@@ -1,23 +1,27 @@
 #!/bin/bash
 # Drew Holt <drew@invadelabs.com>
 # https://github.com/invadelabs/cron-invadelabs/blob/master/check_lynis.sh
-# cron; 59 4 * * 6 /root/scripts/check_lynis.sh
+#
+# cron; 59 4 * * 6 /root/scripts/check_lynis.sh drew@invadelabs.com
 #
 # Script to email lynis system audit
+# needs ansi2html.sh in $PATH http://github.com/pixelb/scripts/commits/master/scripts/ansi2html.sh
 
 PATH="/usr/sbin:$PATH"
+EMAIL_TO="$1"
+
+if [ -z "$EMAIL_TO" ]; then
+  echo "Need an email address. ex:"
+  echo "./gdrive_backup.sh my@gmail.com"
+  exit 1
+fi
 
 run_lynis () {
   lynis audit system
 }
 
 format_ansi2html () {
-  if [ ! -f /root/scripts/ansi2html.sh ]; then
-    curl  -sS -o /root/scripts/ansi2html.sh https://raw.githubusercontent.com/pixelb/scripts/master/scripts/ansi2html.sh
-    chmod 755 /root/scripts/ansi2html.sh
-  fi
-
-  /root/scripts/ansi2html.sh --bg=dark
+  ansi2html.sh --bg=dark
 }
 
 mail_it () {
@@ -30,4 +34,4 @@ mail_it () {
   esac
 }
 
-run_lynis | format_ansi2html | mail_it drew@invadelabs.com
+run_lynis | format_ansi2html | mail_it "$EMAIL_TO"
