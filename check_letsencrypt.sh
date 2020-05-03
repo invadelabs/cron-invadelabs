@@ -7,8 +7,8 @@
 # requires rclone
 
 get_latest () {
-  LATEST="$(rclone ls googledrive:/Backup/Web 2>&1 | grep -E 'invadelabs.com.*.tar.xz' | grep -v sha256 | sort | tail -n 1 | awk -F" " '{ print $2 }')"
-  rclone copy googledrive:/Backup/Web/"$LATEST" /tmp/"$LATEST"
+  LATEST="$(rclone ls googledrive:/Backup/Web 2>&1 | awk -F" " '{ print $2 }' | grep -E '^invadelabs.com.*.tar.xz$' | sort | tail -n 1)"
+  rclone copyto googledrive:/Backup/Web/"$LATEST" /tmp/"$LATEST"
 }
 
 compare_tar () {
