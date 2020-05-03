@@ -62,12 +62,7 @@ hl () {
 }
 
 slack_msg () {
-  if [ ! -f /root/scripts/slacktee.sh ]; then
-    curl -sS -o /root/scripts/slacktee.sh https://raw.githubusercontent.com/course-hero/slacktee/master/slacktee.sh
-    chmod 755 /root/scripts/slacktee.sh
-  fi
-  echo "$1" | \
-  /root/scripts/slacktee.sh \
+  echo "$1" | slacktee.sh \
   --config /root/slacktee.conf \
   -e "Command run" "php /var/www/$SITE/maintenance/generateSitemap.php --compress no --fspath=/var/www/$SITE/sitemap/ --identifier=$SITE --urlpath=https://$SITE/ --server=https://$SITE" \
   -t "$URL" \

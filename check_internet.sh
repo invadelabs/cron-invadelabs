@@ -4,6 +4,10 @@
 # cron; */5 * * * * /root/scripts/check_internet.sh
 #
 # use LTE modem if ETH gateway is down
+# Script to email lynis system audit
+#
+# needs ansi2html.sh in $PATH
+# http://github.com/pixelb/scripts/commits/master/scripts/ansi2html.sh
 
 ETH_DEV="enp1s0"
 ETH_GATEWAY="192.168.1.1"
@@ -26,12 +30,7 @@ lte_down () {
 }
 
 format_ansi2html () {
-  if [ ! -f /root/scripts/ansi2html.sh ]; then
-    curl  -sS -o /root/scripts/ansi2html.sh https://raw.githubusercontent.com/pixelb/scripts/master/scripts/ansi2html.sh
-    chmod 755 /root/scripts/ansi2html.sh
-  fi
-
-  /root/scripts/ansi2html.sh --bg=dark
+  ansi2html.sh --bg=dark
 }
 
 mail_it () {

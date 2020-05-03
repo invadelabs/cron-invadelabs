@@ -40,12 +40,7 @@ DDNS_IP="$(dig +short @8.8.8.8 "$DDNS_HOST" 2>/dev/null || true)"
 DATE="$(date '+%Y-%m-%d-%H:%M:%S%z')"
 
 slack_msg () {
-  if [ ! -f /root/scripts/slacktee.sh ]; then
-    curl -sS -o /root/scripts/slacktee.sh https://raw.githubusercontent.com/course-hero/slacktee/master/slacktee.sh
-    chmod 755 /root/scripts/slacktee.sh
-  fi
-  echo "$1" | \
-  /root/scripts/slacktee.sh \
+  echo "$1" | slacktee.sh \
   --config /root/slacktee.conf \
   -a warning \
   -c general \
