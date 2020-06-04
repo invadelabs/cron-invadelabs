@@ -1,3 +1,6 @@
 --exclude nagios4/var/rw/nagios.qh
 -C /srv nagios4/
 -C /srv bind/
+-C /srv mosquitto/
+-C /srv zigbee2mqtt/
+-C /srv homeassistant/
