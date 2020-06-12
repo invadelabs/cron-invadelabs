@@ -30,7 +30,7 @@ do
   in
   e) EMAIL_TO=${OPTARG};;
   s) USE_SLACK="true";;
-  h) usage
+  *) usage
     ;;
   esac
 done
@@ -76,12 +76,12 @@ slack_msg () {
 
 # if set send the email
 notify_status () {
-  if [ ! -z "$EMAIL_TO" ]; then
+  if [ -n "$EMAIL_TO" ]; then
     echo -e "$URL\n$URL_OLD\n$NEWSITE" | hl | mailer > /dev/null
   fi
 
   # if set send the slack message
-  if [ ! -z "$USE_SLACK" ]; then
+  if [ -n "$USE_SLACK" ]; then
     slack_msg "$URL_OLD\n$NEWSITE"  > /dev/null;
   fi
 }
