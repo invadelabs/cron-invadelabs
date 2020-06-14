@@ -4,3 +4,5 @@
 -C /srv mosquitto/
 -C /srv zigbee2mqtt/
 -C /srv homeassistant/
+-C /srv influxdb/
+-C /srv grafana/
