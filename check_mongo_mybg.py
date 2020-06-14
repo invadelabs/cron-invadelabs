@@ -6,12 +6,13 @@ import sys
 import time
 from pymongo import MongoClient
 
-if len(sys.argv) < 2:
-    print("usage: %s <seconds>" % sys.argv[0])
+if len(sys.argv) < 3:
+    print("usage: %s <env_file> <seconds>" % sys.argv[0])
+    print("e.x.: %s /etc/default/cgm.env 14400" % sys.argv[0])
     sys.exit(3)
 
-FILENAME = "/root/my.env"
-max_time = int(sys.argv[1])
+FILENAME = sys.argv[1]
+max_time = int(sys.argv[2])
 
 # parse variable file
 envvars = {}
