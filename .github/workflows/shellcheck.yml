@@ -12,3 +12,4 @@ jobs:
     steps:
     - name: Run ShellCheck
       uses: ludeeus/action-shellcheck@master
+      run: shellcheck *.sh
