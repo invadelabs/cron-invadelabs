@@ -3,6 +3,9 @@
 # https://github.com/invadelabs/cron-invadelabs/blob/master/check_ddns.sh
 # cron; */5 * * * * /root/scripts/check_ddns.sh nm.invadelabs.com
 #
+# shellcheck disable=SC2206
+# SC2206: Quote to prevent word splitting/globbing, or split robustly with mapfile or read -a.
+#
 # Script to update google domains ddns with netrc credentials file
 # then update google cloud firewall rule
 
@@ -26,7 +29,7 @@ valid_ip () {
   if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
     OIFS=$IFS
     IFS='.'
-    ip=("$ip")
+    ip=($ip)
     IFS=$OIFS
     [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 \
       && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
