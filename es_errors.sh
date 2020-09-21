@@ -23,4 +23,4 @@ STDERROR=$(curl -sS -XPOST "http://192.168.1.125:9200/docker-$DATE,rsyslog-$DATE
 '
 )
 
-echo "$STDERROR" | jq -r .hits.hits[]._source.message | uniq -w 15 -c -i -f 5 | sort -nr  | mailx -s "Past 24h Errors in Elasticsearch" $EMAIL_ADDR
+echo "$STDERROR" | jq -r .hits.hits[]._source.message | uniq -w 15 -c -i -f 5 | sort -nr  | mailx -s "Past 24h Errors in Elasticsearch" "$EMAIL_ADDR"
