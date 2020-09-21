@@ -11,6 +11,7 @@ Supporting scripts for [invadelabs.com](https://invadelabs.com).
 | check_lynis.sh       | mail over weekly cron of lynis audit                                |
 | check_temp.sh        | Nagios plugin to check temp from /temp entry                        |
 | dd-wrt_backup.sh     | simple DD-WRT config backup script                                  |
+| es_errors.sh         | cron to check for warning/fail/error/denied in ES and email report  |
 | gdrive_backup.sh     | google drive backup script on cron for invadelabs.com and drew-serv |
 | gen_sitemap.sh       | create new mediawiki sitemap for search engines                     |
 | mysql_backup.sh      | simple mysql backup script                                          |
