@@ -1,11 +1,11 @@
 --exclude nagios4/var/rw/nagios.qh
 --exclude pihole/etc-pihole/pihole-FTL.db
+--exclude pihole/etc-pihole/gravity.db
 --exclude homeassistant/home-assistant_v2.db
 --exclude zoneminder/mysql/
 --exclude zoneminder/hook/models/
 -C /srv nagios4/
 -C /srv pihole/
--C /srv bind/
 -C /srv mosquitto/
 -C /srv zigbee2mqtt/
 -C /srv homeassistant/
