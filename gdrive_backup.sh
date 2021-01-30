@@ -61,7 +61,6 @@ DATE=$(date '+%Y%m%d%H%M%S%z')
 
 # pack everything into a tar.xz
 pack_tar () {
-  # --warning=no-file-changed for "tar: nagios4/var: file changed as we read it"
   tar -I "pxz -T 0" --warning=no-file-changed -cf /root/"$ARCHIVE"."$DATE".tar.xz -T "$FILELIST"
 }
 
@@ -80,7 +79,7 @@ check_md5 () {
   fi
 }
 
-# get the status of archive on google drive and strip out ansi colors
+# get the stats of archive on google drive
 get_stat () {
   rclone lsjson -v "$DESTINATION"/"$ARCHIVE"."$DATE".tar.xz | jq -M -c '.[]';
   check_md5

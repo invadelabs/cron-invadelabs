@@ -1,6 +1,6 @@
 # cron-invadelabs [![Build Status](https://travis-ci.org/invadelabs/cron-invadelabs.svg?branch=master)](https://travis-ci.org/invadelabs/cron-invadelabs) [![Code Coverage](https://codecov.io/gh/invadelabs/cron-invadelabs/branch/master/graph/badge.svg)](https://codecov.io/gh/invadelabs/cron-invadelabs/branch/master)
 
-Supporting scripts for [invadelabs.com](https://invadelabs.com).
+Supporting scripts I've written for [invadelabs.com](https://invadelabs.com).
 
 | script               | function                                                            |
 | -------------------- | ------------------------------------------------------------------- |
@@ -9,6 +9,7 @@ Supporting scripts for [invadelabs.com](https://invadelabs.com).
 | check_internet.sh    | if eth device down then set gateway to lte, restore when recovered  |
 | check_letsencrypt.sh | cron to sync letsencrypt wildcard among hosts                       |
 | check_lynis.sh       | mail over weekly cron of lynis audit                                |
+| check_mongo_mybg.py  | Nagios script to check last time of xDrip entry to mongo db         |
 | check_temp.sh        | Nagios plugin to check temp from /temp entry                        |
 | dd-wrt_backup.sh     | simple DD-WRT config backup script                                  |
 | es_errors.sh         | cron to check for warning/fail/error/denied in ES and email report  |
