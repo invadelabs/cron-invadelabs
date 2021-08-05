@@ -57,11 +57,15 @@ slack_msg () {
 
 if [ ! "$IP" == "$DDNS_IP" ] && valid_ip "$IP"; then
   # update google domains ddns
-  CURL="$(curl --netrc-file /root/check_ddns.cred -sS "https://domains.google.com/nic/update?hostname=$DDNS_HOST&myip=$IP")"
+  #CURL="$(curl --netrc-file /root/check_ddns.cred -sS "https://domains.google.com/nic/update?hostname=$DDNS_HOST&myip=$IP")"
+
+  # update cloudflare dns
+  cloudflare-ddns "$(cat /root/cloudflare_ddns.cred)" "$1"
+
   # update gcp firewall rule
   /var/lib/snapd/snap/bin/gcloud compute firewall-rules update ssh-drew-nm1 --source-ranges "$IP"/32 2>/dev/null
 
-  slack_msg "$( echo -e "${DDNS_HOST} IP Updated: \nDate Run: ${DATE} \nNew IP: $IP \nOld IP: $DDNS_IP \nCurl Output: ${CURL}")"
+  slack_msg "$( echo -e "${DDNS_HOST} IP Updated: \nDate Run: ${DATE} \nNew IP: $IP \nOld IP: $DDNS_IP")"
 elif [ "$IP" == "$DDNS_IP" ]; then
   exit 0
 elif [ -z "$IP" ]; then
