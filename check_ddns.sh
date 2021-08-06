@@ -60,7 +60,9 @@ if [ ! "$IP" == "$DDNS_IP" ] && valid_ip "$IP"; then
   #CURL="$(curl --netrc-file /root/check_ddns.cred -sS "https://domains.google.com/nic/update?hostname=$DDNS_HOST&myip=$IP")"
 
   # update cloudflare dns
-  cloudflare-ddns "$(cat /root/cloudflare_ddns.cred)" "$1"
+  USER=$(jq -r .username < /root/cloudflare_ddns.cred)
+  API_KEY=$(jq -r .api_key < /root/cloudflare_ddns.cred)
+  cloudflare-ddns "$USER" "$API_KEY" "$DDNS_HOST"
 
   # update gcp firewall rule
   /var/lib/snapd/snap/bin/gcloud compute firewall-rules update ssh-drew-nm1 --source-ranges "$IP"/32 2>/dev/null
