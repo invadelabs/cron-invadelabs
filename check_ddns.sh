@@ -65,7 +65,7 @@ if [ ! "$IP" == "$DDNS_IP" ] && valid_ip "$IP"; then
   cloudflare-ddns "$USER" "$API_KEY" "$DDNS_HOST"
 
   # update gcp firewall rule
-  /var/lib/snapd/snap/bin/gcloud compute firewall-rules update ssh-drew-nm1 --source-ranges "$IP"/32 2>/dev/null
+  /var/lib/snapd/snap/bin/gcloud compute firewall-rules update allow-drew-nm1 --source-ranges "$IP"/32 2>/dev/null
 
   slack_msg "$( echo -e "${DDNS_HOST} IP Updated: \nDate Run: ${DATE} \nNew IP: $IP \nOld IP: $DDNS_IP")"
 elif [ "$IP" == "$DDNS_IP" ]; then
