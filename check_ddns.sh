@@ -39,7 +39,7 @@ valid_ip () {
 }
 
 IP="$(dig +short myip.opendns.com @resolver1.opendns.com 2>/dev/null || true)"
-DDNS_IP="$(dig +short @8.8.8.8 "$DDNS_HOST" 2>/dev/null || true)"
+DDNS_IP="$(dig +short @myip.opendns.com @resolver1.opendns.com "$DDNS_HOST" 2>/dev/null || true)"
 DATE="$(date '+%Y-%m-%d-%H:%M:%S%z')"
 
 slack_msg () {
@@ -66,6 +66,8 @@ if [ ! "$IP" == "$DDNS_IP" ] && valid_ip "$IP"; then
 
   # update gcp firewall rule
   /var/lib/snapd/snap/bin/gcloud compute firewall-rules update allow-drew-nm1 --source-ranges "$IP"/32 2>/dev/null
+
+  ssh -i /home/drew/.ssh/tunnel_2020.05.17 drew@srv.invadelabs.com "echo $IP > /home/drew/home_ip"
 
   slack_msg "$( echo -e "${DDNS_HOST} IP Updated: \nDate Run: ${DATE} \nNew IP: $IP \nOld IP: $DDNS_IP")"
 elif [ "$IP" == "$DDNS_IP" ]; then
