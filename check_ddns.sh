@@ -39,7 +39,7 @@ valid_ip () {
 }
 
 IP="$(dig +short myip.opendns.com @resolver1.opendns.com 2>/dev/null || true)"
-DDNS_IP="$(dig +short @myip.opendns.com @resolver1.opendns.com "$DDNS_HOST" 2>/dev/null || true)"
+DDNS_IP="$(dig +short @resolver1.opendns.com "$DDNS_HOST" 2>/dev/null || true)"
 DATE="$(date '+%Y-%m-%d-%H:%M:%S%z')"
 
 slack_msg () {
