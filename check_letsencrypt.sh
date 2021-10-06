@@ -27,7 +27,7 @@ get_latest
 
 if ! compare_tar; then
   extract_latest
-  systemctl reload httpd
+  docker restart nginx
 fi
 
 clean_up
