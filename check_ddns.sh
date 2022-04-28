@@ -65,7 +65,7 @@ if [ ! "$IP" == "$DDNS_IP" ] && valid_ip "$IP"; then
   cloudflare-ddns "$USER" "$API_KEY" "$DDNS_HOST"
 
   # update gcp firewall rule
-  /var/lib/snapd/snap/bin/gcloud compute firewall-rules update allow-drew-nm1 --source-ranges "$IP"/32 2>/dev/null
+  /snap/bin/gcloud compute firewall-rules update allow-drew-nm1 --source-ranges "$IP"/32
 
   ssh -i /home/drew/.ssh/tunnel_2020.05.17 drew@srv.invadelabs.com "echo $IP > /home/drew/home_ip"
 
