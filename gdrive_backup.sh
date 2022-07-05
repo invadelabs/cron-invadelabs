@@ -61,7 +61,7 @@ DATE=$(date '+%Y%m%d%H%M%S%z')
 
 # pack everything into a tar.xz
 pack_tar () {
-  tar -I "pxz -T 0" --warning=no-file-changed -cf /root/"$ARCHIVE"."$DATE".tar.xz -T "$FILELIST"
+  tar -I "pxz -T 0" --warning=no-file-changed -cf /root/"$ARCHIVE"."$DATE".tar.xz $(cat $FILELIST)
 }
 
 # push archive and sha256sum to google drive
