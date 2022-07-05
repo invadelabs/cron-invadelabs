@@ -4,6 +4,7 @@
 --exclude nagios4/etc/nagios-invadelabs/.git
 -C /srv nagios4/
 -C /srv nginx/
+-C /srv prometheus/
 -C /srv ring-mqtt/
 -C /srv zigbee2mqtt/
 --exclude homeassistant/home-assistant_v2.db
