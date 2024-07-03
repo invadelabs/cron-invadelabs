@@ -1,13 +1,12 @@
--C /srv grafana/
--C /srv mosquitto/
 --exclude nagios4/var/rw/nagios.qh
---exclude nagios4/etc/nagios-invadelabs/.git
--C /srv nagios4/
--C /srv nginx/
--C /srv prometheus/
--C /srv ring-mqtt/
--C /srv zigbee2mqtt/
+--exclude pihole/etc-pihole/pihole-FTL.db
+--exclude pihole/etc-pihole/gravity.db
 --exclude homeassistant/home-assistant_v2.db
---exclude homeassistant/backups
 --exclude homeassistant/.git
+--exclude homeassistant/tts
+-C /srv nagios4/
+-C /srv pihole/
+-C /srv mosquitto/
+-C /srv zigbee2mqtt/
 -C /srv homeassistant/
+-C /srv grafana/
